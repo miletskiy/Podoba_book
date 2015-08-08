@@ -1,54 +1,14 @@
+{% extends "students/base.html" %}
+
 {% load static from staticfiles %}
 
-<!DOCTYPE html>
-<html lang="uk"> 
-  <head>
-    <meta charset="UTF-8"/>
-    <title>Сервіс Обліку Студентів</title> 
-    <meta name="description" value="Система Обліку Студентів Навчального Закладу" />
-    <!-- Dodaly styes -->
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href={% static "css/main.css" %}>
-<!--        <link rel="stylesheet" href="/static/css/main.css">-->
+{% block meta_title %}Студенти{% endblock meta_title %}
 
-    <!--
-     <style type="text/css">.col-xs-12, .col-xs-4, .col-xs-8 {border:1px solid red;}</style>
-    -->
+{% block title %}База Студентів{% endblock title %}
 
-  </head>
-
-
-  <body>
-    <!-- <h1>Вітаю вас на нашій сторінці!</h1> -->
-      <!-- <p>Поки тут порожньо, але незабаром ми матимемо список студентів</p> -->
-      <!-- Start Container -->
-      <div class="container">
-
-        <!-- Start Header -->
-        <div class="row" id="header">
-
-          <!-- Logo -->
-          <div class="col-xs-8"> 
-            <h1>Сервіс Обліку Студентів</h1>
-          </div>
-
-          <!-- Groups Selector -->
-          <div class="col-xs-4" id="group-selector"> 
-            <!-- С􏰃електор􏰌􏰃􏰇􏰂􏰀􏰍 Г􏰍􏰈􏰄руп -->
-            <strong>Група:</strong>
-              <select>
-                <option value="">Усі Студенти</option>
-                <option value="">Мтм-21, Віталій Подоба</option>
-                <option value="">Мтм-22, Андрій Петров</option>
-              </select>
-          </div>
-
-
-        </div>
-        <!-- End Header -->
-<!--Тут оновили линкы головонои навигации:Студенти, Видвидування, групи, атрибуты "href"всередине 'a' тегов-->
-        <!-- Start subheader -->
+<!--
+{% block subheader %}
+         Start subheader 
         <div class="row" id="sub-header"> 
           <div class="col-xs-12">
             <ul class="nav nav-tabs" role="tablist">
@@ -57,27 +17,17 @@
               <li role="presentation"><a href={% url "groups" %}>Групи</a></li>
             </ul>
           </div>
-
         </div>
-        <!-- End subheader -->
+{% endblock subheader %}
+-->
 
-<!-- Start Main Page Content -->
-          <div class="row" id="content-columns">
-            <div class="col-xs-12" id="content-column"> 
-            <!-- Status Message -->
-              <div class="alert alert-warning"> Змины скасовано. </div>
-<!--А тут оновлена адреса кнопки Додати Студента-->
-              <h2>База Студентів</h2>
+{% block content %}
 
-              <!-- Add Student Button -->
-<!--              <a class="btn btn-primary" href="/students/add">Д􏰀􏰉􏰎􏰂􏰅одати Студента􏰂􏰈􏰉􏰃􏰁􏰂􏰎</a>-->
-         <a class="btn btn-primary" href={% url "students_add" %}>Д􏰀􏰉􏰎􏰂􏰅одати Студента􏰂􏰈􏰉􏰃􏰁􏰂􏰎</a>
+<!-- Add Student Button -->
+<a class="btn btn-primary" href={% url "students_add" %}>Д􏰀􏰉􏰎􏰂􏰅одати Студента􏰂􏰈􏰉􏰃􏰁􏰂􏰎</a>
 
-
-<!--                 <div>Т􏰈􏰂ут буде таблиця студентыв</div>
- -->
 <!-- Start Students Listing -->
-          <table class="table table-hover table-striped">
+          <table class="table">
             <thead>
               <tr>
                 <th><a href="">№</a></th>
@@ -90,30 +40,25 @@
             </thead>
             <tbody>
 <!--             Оновлено посилання на дии над студентом-->
-             {% for student in students %}
+        {% for student in students %}
               <tr>
                 <td>{{ forloop.counter }}</td> 
                 <td><img height="30" width="30" src={% static student.image %} class="img-circle"/></td>
 <!--                 {% static "css/main.css" %}-->
 <!--               добавил две кавыычки в хреф-->
                 <td><a href={% url 'students_edit' student.id %}>{{ student.last_name }}</td> 
-                <td><a href={% url "students_edit" student.id %}>{{ student.first_name }}􏰓</td>
-                
+                <td><a href={% url "students_edit" student.id %}>{{ student.first_name }}􏰓</td>    
 <!--
               <td><a title="Р􏰃􏰉􏰎􏰋􏰈􏰊􏰎􏰂􏰅едагувати" href={% url 'students_edit' student.id %}>{{ student.last_name }}</a></td> 
               <td><a title="Р􏰃􏰉􏰎􏰋􏰈􏰊􏰎􏰂􏰅едагувати" href={% url "students_edit" student.id %}>{{ student.first_name }}􏰓</a></td>
- 
 -->
-                
                 <td>{{ student.ticket }}</td> 
                 <td>
-
-                <div class="btn-group">
+                  <div class="btn-group">
 <!--                <div class="btn-group">-->
-                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                          Дія
-                    <span class="caret"></span>
-                  </button>
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Дія
+                      <span class="caret"></span>
+                    </button>
                   <ul class="dropdown-menu" role="menu">
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
@@ -129,16 +74,12 @@
                         </li>
                   </ul>
                 </div>
-
-                </td>
-              </tr>
-              
+              </td>
+            </tr>
             {% endfor %}
             
-            </tbody>
-          </table>
-
-
+          </tbody>
+        </table>
 <!-- End Students Listing -->
 <!--Navigation by page start-->
           <nav>
@@ -152,46 +93,10 @@
               <li><a href="#">&raquo;</a></li>
             </ul> 
           </nav>
-
+    
 <!--Navigation by page end-->
-           
-           
-            </div>
-           </div>
+          
+{% endblock content %}
+
 <!-- End Main Page Content -->
-
-           <!-- Start Footer -->
-          <div class="row" id="footer"> 
-            <div class="col-xs-12">
-              &copy; 2015  Сервіс обліку cтудентів
-            </div>
-          </div>
-          <!-- End Footer -->
-
-
-      <!-- END Container -->
-      </div>
-
-
-
-<!--       <div class="col-xs-8">
-      </div>
-        <h1>Сервіс Обліку Студентів</h1>
-    </div> -->
-
-
-
-
-
-      <!-- Javascripts Section -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
-      </script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
-      </script>
-
-
-  </body>
-</html>
-
-
 
