@@ -45,7 +45,7 @@ urlpatterns = patterns('',
 	url(r'^journal/$', 'students.views.journal.journal_list', name='journal'),
 
 
-
+	#Default admin url
     url(r'^admin/', include(admin.site.urls)),
 )
 
