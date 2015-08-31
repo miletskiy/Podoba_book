@@ -49,8 +49,8 @@ class Student(models.Model):
     #     max_length = 6,
     #     )
 
-    # def __unicode__(self):
-    #     return u"%s %s" % (self.first_name,self.last_name)
+    def __unicode__(self):
+        return u"%s %s" % (self.first_name,self.last_name)
     # def __unicode__(self):
     #     return u"%s %s" % (unicode(self.first_name),unicode(self.last_name))
 
@@ -79,18 +79,18 @@ class Group(models.Model):
         blank=True,
         null = True,
         on_delete = models.SET_NULL,
-        default = u"Localerror")
+        )
 
 
     notes = models.TextField(
         blank=True,
         verbose_name=u"Дополнительные заметки")
 
-    # def __unicode__(self):
-    #     # if self.starosta:
-    #     #     return u"%s (%s %s)" % (self.title,self.starosta.first_name,self.starosta.last_name)
-    #     # else:
-    #     #     return u"%s" % (self.title,)
+    def __unicode__(self):
+        if self.starosta:
+            return u"%s (%s %s)" % (self.title,self.starosta.first_name,self.starosta.last_name)
+        else:
+            return u"%s" % (self.title,)
 
     #     if self.starosta:
     #         return u"%s (%s %s)" % (unicode(self.title),unicode(self.starosta.first_name),unicode(self.starosta.last_name))
