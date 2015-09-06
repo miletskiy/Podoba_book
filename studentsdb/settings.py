@@ -77,12 +77,14 @@ WSGI_APPLICATION = 'studentsdb.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR,'..' , 'db.sqlite3'),
-    }
-}
+from .database.db import DATABASES
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR,'..' , 'db.sqlite3'),
+#     }
+# }
 
 
 # Internationalization
@@ -104,7 +106,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + ( "django.core.context_processors.request","studentsdb.context_processors.students_proc",)
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    "django.core.context_processors.request",
+    "studentsdb.context_processors.students_proc",)
 
 PORTAL_URL = 'http://localhost:8000'
 
