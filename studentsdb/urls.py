@@ -17,7 +17,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 
-
 urlpatterns = patterns('',
     # Students urls
     	# url(r'^students/add/$', 'students.views.students_edit',

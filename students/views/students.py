@@ -8,16 +8,17 @@ from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 from ..models.student import Student
 
 def students_list(request):
-    students = Student.objects.all()
+    students = Student.objects.all().order_by('last_name')
 
     # try to order students list
     order_by = request.GET.get('order_by', '')
-    if order_by in ('number','last_name', 'first_name', 'ticket'):
+    if order_by in ('last_name', 'first_name', 'ticket','id'):
         students = students.order_by(order_by)
         if request.GET.get('reverse', '') == '1':
             students = students.reverse()
+
     # paginate students
-    paginator = Paginator(students, 3)
+    paginator = Paginator(students, 9)
     page = request.GET.get('page')
     try:
         students = paginator.page(page)

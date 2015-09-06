@@ -59,12 +59,31 @@
         <div class="row" id="sub-header"> 
           <div class="col-xs-12">
             <ul class="nav nav-tabs" role="tablist">
+
              {% url 'home' as url1 %}
-              <li role="presentation" {% ifequal request.path url1 %}class="active"{% endifequal %}><a href={% url "home" %}>Студенти</a></li>
+              <!--<li role="presentation" {% ifequal request.path url1 %}class="active"{% endifequal %}>-->
+                  <!--<a href={% url "home" %}>Студенти</a></li>-->
+              <!--<li role="presentation" {% if url1 == request.path  %}class="active"{% endif %}> rabotaet toje-->
+              <!--<li role="presentation" {% if request.path = url1  %}class="active"{% endif %}>tak rabotaet toje. why?-->
+<!--                 request.path += 'order_by=last_name'-->
+<!--                 request.path = request.path|order_by=last_name-->
+
+              <li role="presentation" 
+              {% if request.path == url1 %}
+                class="active" 
+              {% endif %}>
+                  <a href={% url "home" %}>Студенти</a></li>
+<!--                  <a href="{% url "home" %}?order_by=last_name">Студенти</a></li>-->
+<!--                  <a href="{% url "home" %}?order_by=last_name{% if order_by == 'last_name' and reverse != '1' %}&amp;reverse=1{% endif %}">Студенти</a></li>                  -->
               {% url 'journal' as url2 %}
-              <li role="presentation" {% ifequal request.path url2 %}class="active"{% endifequal %}><a href={% url "journal" %}>Відвідування</a></li>
+              <li role="presentation" {% ifequal request.path url2 %}class="active"{% endifequal %}>
+                  <a href={% url "journal" %}>
+                    Відвідування
+                  </a>
+              </li>
               {% url 'groups' as url3 %}
-              <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}><a href={% url "groups" %}>Групи</a></li>
+              <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}>
+                  <a href={% url "groups" %}>Групи</a></li>
               
             </ul>
           </div>
