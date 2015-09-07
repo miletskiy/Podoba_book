@@ -85,6 +85,10 @@
               <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}>
                   <a href={% url "groups" %}>Групи</a></li>
               
+               {% url 'exams' as url4 %}
+              <li role="presentation" {% ifequal request.path url4 %}class="active"{% endifequal %}>
+                  <a href={% url "exams" %}>Icпити</a></li>
+              
             </ul>
           </div>
         </div>

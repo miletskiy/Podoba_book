@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='starosta',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, default='Localerror', to='students.Student', blank=True, verbose_name='\u0421\u0442\u0430\u0440\u043e\u0441\u0442\u0430'),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='students.Student', blank=True, verbose_name='\u0421\u0442\u0430\u0440\u043e\u0441\u0442\u0430'),
         ),
     ]
