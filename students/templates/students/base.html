@@ -85,22 +85,37 @@
               <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}>
                   <a href={% url "groups" %}>Групи</a></li>
               
+               {% url 'exams' as url4 %}
+              <li role="presentation" {% ifequal request.path url4 %}class="active"{% endifequal %}>
+                  <a href={% url "exams" %}>Icпити</a></li>
+              
             </ul>
           </div>
         </div>
 <!-- End subheader -->
-<!-- Start Main Page Content -->  <!-- Start Content Columns -->
+<!-- Start Main Page Content -->  
+         <!-- Start Content Columns -->
           <div class="row" id="content-columns">
             <div class="col-xs-12" id="content-column"> 
             <!-- Status Message -->
-            {% comment "Not used alert so far" %}
-              <div class="alert alert-warning" role="alert"> Status Update! </div>
-              
-            {% endcomment %}
+            {% block status_message %}
+             {% if request.GET.status_message %}
+              <div class="alert alert-success" role="alert"> {{request.GET.status_message}}
+              </div>
+              {% endif %}
+            {% endblock %}
+<!-- End Content Columns -->
+             <div class="col-xs-3" style="float: left;"> 
+               <h2>{% block title %}{% endblock title %}</h2> 
+             </div>
+             
+<!--
+              <div class="col-xs-9" style="float: left;"> 
 
-             <div class="col-xs-3" style="float: left;"> <h2>{% block title %}{% endblock title %}</h2> </div>
-              {% block content %}{% endblock content %}
+              </div>
+-->
                 
+               {% block content %}{% endblock content %}
               </div>
             </div>
   <!-- End Main Page Content --><!-- End Content Columns -->
