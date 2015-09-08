@@ -33,3 +33,13 @@ border-top: 1px solid #dddddd;
 #group-selector { 
   margin-top: 30px;
 ￼}
+
+/* Form Styles */
+textarea,
+select,
+input{
+    max-width: 300px;
+/*    border: 5px solid red !important;
+    background-color:red ;
+*/￼
+}
