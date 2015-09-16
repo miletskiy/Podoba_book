@@ -58,7 +58,7 @@
 <!--         Start subheader -->
         <div class="row" id="sub-header"> 
           <div class="col-xs-12">
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs " role="tablist">
 
              {% url 'home' as url1 %}
               <!--<li role="presentation" {% ifequal request.path url1 %}class="active"{% endifequal %}>-->
@@ -68,54 +68,60 @@
 <!--                 request.path += 'order_by=last_name'-->
 <!--                 request.path = request.path|order_by=last_name-->
 
-              <li role="presentation" 
+              <li role="presentation"
               {% if request.path == url1 %}
-                class="active" 
+                class="active"
               {% endif %}>
-                  <a href={% url "home" %}>Студенти</a></li>
+                  <a class="glyphicon glyphicon-user" aria-hidden="true" href={% url "home" %}> <b>Студенти</b></a></li>
 <!--                  <a href="{% url "home" %}?order_by=last_name">Студенти</a></li>-->
 <!--                  <a href="{% url "home" %}?order_by=last_name{% if order_by == 'last_name' and reverse != '1' %}&amp;reverse=1{% endif %}">Студенти</a></li>                  -->
               {% url 'journal' as url2 %}
               <li role="presentation" {% ifequal request.path url2 %}class="active"{% endifequal %}>
-                  <a href={% url "journal" %}>
-                    Відвідування
+                  <a class="glyphicon glyphicon-calendar" href={% url "journal" %}>
+                    <b>Відвідування</b>
                   </a>
               </li>
               {% url 'groups' as url3 %}
               <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}>
-                  <a href={% url "groups" %}>Групи</a></li>
+                  <a class="glyphicon glyphicon-list" href={% url "groups" %}><b> Групи</b> </a></li>
               
                {% url 'exams' as url4 %}
               <li role="presentation" {% ifequal request.path url4 %}class="active"{% endifequal %}>
-                  <a href={% url "exams" %}>Icпити</a></li>
+                  <a class="glyphicon glyphicon-education" href={% url "exams" %}> <b>Icпити</b></a></li>
+                  
+              {% url 'contact_admin' as url5 %}
+              <li role="presentation" {% ifequal request.path url5 %}class="active"{% endifequal %}>
+                  <a class="glyphicon glyphicon-envelope" href={% url "contact_admin" %}> <b>Контакт</b></a></li>
               
             </ul>
           </div>
         </div>
 <!-- End subheader -->
-<!-- Start Main Page Content -->  
+<!-- Start Main Page Content -->
+
          <!-- Start Content Columns -->
           <div class="row" id="content-columns">
             <div class="col-xs-12" id="content-column"> 
             <!-- Status Message -->
             {% block status_message %}
              {% if request.GET.status_message %}
-              <div class="alert alert-success" role="alert"> {{request.GET.status_message}}
-              </div>
+                  <div class="alert alert-success" role="alert"> {{request.GET.status_message}}
+                  </div>
               {% endif %}
             {% endblock %}
 <!-- End Content Columns -->
-             <div class="col-xs-3" style="float: left;"> 
+
+             <div class="col-xs-5" style="float: left;">
                <h2>{% block title %}{% endblock title %}</h2> 
              </div>
-             
 <!--
-              <div class="col-xs-9" style="float: left;"> 
+              <div class="col-xs-9" style="float: left;">
 
               </div>
 -->
-                
-               {% block content %}{% endblock content %}
+               {% block content %}
+
+                {% endblock content %}
               </div>
             </div>
   <!-- End Main Page Content --><!-- End Content Columns -->
@@ -123,9 +129,12 @@
            <!-- Start Footer -->
            {% block footer %}
           <div class="row" id="footer"> 
-            <div class="col-xs-12">
-              &copy; 2015  Сервіс обліку cтудентів
+            <div class="col-xs-9">
+              &copy; 2015  Сервіс обліку cтудентів {% now "z" %}
             </div>
+              <div class="col-xs-3">
+                  {% now "j E Y | l H:i" %}
+              </div>
           </div>
           {% endblock footer %}
           <!-- End Footer -->

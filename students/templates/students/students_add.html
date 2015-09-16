@@ -22,13 +22,19 @@
 -->
 
 
+
  {% block status_message %}
-{% if errors %}
-<div class="alert alert-danger" role="alert">
- Будь-ласка, виправте наступні помилки
- </div>
-  {% endif %}
+
+{% if messages %}
+  <div class="alert alert-warning">
+          {% for message in messages %}
+              {{ message }}
+          {% endfor %}
+  </div>
+{% endif %}  
+
 {% endblock status_message %}
+
 {% block content %}
 <!--<style type="text/css">.col-xs-12, .col-xs-4, .col-xs-6 {border: 1px solid red;}</style>-->
 <!-- Add Student Button -->

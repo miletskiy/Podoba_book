@@ -20,10 +20,21 @@
         </div>
 {% endblock subheader %}
 -->
+ {% block status_message %}
+
+    {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+ {% endif %}
+
+ {% endblock status_message %}
 
 {% block content %}
               <!-- Add Student Button -->
-<div class="col-xs-8" style="margin: 2% 0 2% 0">
+<div class="col-xs-7" style="margin: 2% 0 2% 0">
               <a class="btn btn-primary" href={% url "groups_add" %}>Додати Групу</a>
 </div>
 

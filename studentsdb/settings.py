@@ -33,12 +33,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'flat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'students',
 )
 
@@ -92,7 +94,7 @@ from .database.db import DATABASES
 
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'uk'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -114,5 +116,33 @@ PORTAL_URL = 'http://localhost:8000'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'..','media')
+
+
+# email settings
+# please, set here you smtp server details and your admin email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ADMIN_EMAIL = 's.miletskiy@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 's.miletskiy@gmail.com'
+EMAIL_HOST_PASSWORD = '**********'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+# ADMIN_EMAIL = 's.miletskiy@gmail.com'
+# EMAIL_HOST = 'smtp.mandrillapp.com'
+# EMAIL_PORT = '587'
+# EMAIL_HOST_USER = 's.miletskiy@gmail.com'
+# EMAIL_HOST_PASSWORD = '9l_sUJ5YZLV7yu3SorEW0g'
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+
+
+
+
+
 
 

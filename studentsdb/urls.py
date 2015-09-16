@@ -15,20 +15,44 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from students.views.testview import StudentList
 
+# Domashka 352
+from students.views.admin_kontakt_class import KontaktForm
+from students.views.contact_admin_class import ContactAdmin
+
+# str357
+from students.views.students import StudentUpdateView,StudentDeleteView
+
+# Domashka 365
+from students.views.groups import GroupDeleteView
 
 urlpatterns = patterns('',
     # Students urls
     	# url(r'^students/add/$', 'students.views.students_edit',
     url(r'^$', 'students.views.students.students_list', name='home'),
+
     url(r'^students/add/$', 'students.views.students.students_add',
          name='students_add'),
 
-    url(r'^students/(?P<sid>\d+)/edit/$',
-         'students.views.students.students_edit',
+    # url(r'^students/(?P<sid>\d+)/edit/$',
+    #      'students.views.students.students_edit',
+    #      name='students_edit'),
+    url(r'^students/(?P<pk>\d+)/edit/$',
+         StudentUpdateView.as_view(),
          name='students_edit'),
-    url(r'^students/(?P<sid>\d+)/delete/$',
-         'students.views.students.students_delete',
+
+# Domashka 357
+    url(r'^students/(?P<pk>\d+)/edit1/$',
+         'students.views.student_edit.student_edit' ,
+         name='students_edit1'),
+
+    
+    # url(r'^students/(?P<sid>\d+)/delete/$',
+    #      'students.views.students.students_delete',
+    #      name='students_delete'),
+    url(r'^students/(?P<pk>\d+)/delete/$',
+         StudentDeleteView.as_view(),
          name='students_delete'),
 
     # Groups Listing urls
@@ -37,10 +61,18 @@ urlpatterns = patterns('',
          name='groups_add'),
 	url(r'^groups/(?P<gid>\d+)/edit/$','students.views.groups.groups_edit',
 		name='groups_edit'),
-	url(r'^groups/(?P<gid>\d+)/delete/$',
-         'students.views.groups.groups_delete',
+
+	url(r'^groups/(?P<pk>\d+)/delete/$',
+         'students.views.groups.groups_delete_my',
          name='groups_delete'),
-    
+
+	# url(r'^groups/(?P<pk>\d+)/delete/$',
+     #     GroupDeleteView.as_view(),
+     #     name='groups_delete'),
+
+
+
+
     # Journal urls
 	url(r'^journal/$', 'students.views.journal.journal_list', name='journal'),
 
@@ -54,9 +86,26 @@ urlpatterns = patterns('',
          'students.views.exams.exams_delete',
          name='exams_delete'),
 
+    # Contact Admin Form
+    # url(r'^contact-admin/$', 'students.views.contact_admin.contact_admin',
+    #         name='contact_admin'),
+    url(r'^contact-admin/$', ContactAdmin.as_view(),
+            name='contact_admin'),
+
+    # test form
+    url(r'^student-list/$', StudentList.as_view()),
+
+# Domashka 352
+#     url(r'^kontakt/$', KontaktForm.as_view(),
+#         name='kontakt'),
+
+    # url(r'^contact/', include('contact_form.urls')),
+
+    # url(r'contact/', KontaktAdmin.as_view(), name='contact_form'),
 
 	#Default admin url
     url(r'^admin/', include(admin.site.urls)),
+
 )
 
 from .settings import MEDIA_ROOT, DEBUG
