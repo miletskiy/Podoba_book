@@ -42,9 +42,30 @@ input{
 */￼
 }
 
-/*Add bold to main menu tabs */
+/*Add bold to main menu tabs. Do not works.
 #sub-header>.col-xs-12>.nav>.my-bold{
 
     font-weight: bold !important;
     color:red;
 }
+*/
+
+/* Journal Table Styles */
+td.day-box, 
+th.day-header {
+    padding: 6px !important; 
+    /*padding: 1% !important; */
+    vertical-align: middle !important; 
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -130,10 +130,10 @@
            {% block footer %}
           <div class="row" id="footer"> 
             <div class="col-xs-9">
-              &copy; 2015  Сервіс обліку cтудентів {% now "z" %}
+              &copy;  Сервіс обліку cтудентів {% now "Y"%}
             </div>
               <div class="col-xs-3">
-                  {% now "j E Y | l H:i" %}
+                  {% now "j E  | l H:i | z" %}
               </div>
           </div>
           {% endblock footer %}

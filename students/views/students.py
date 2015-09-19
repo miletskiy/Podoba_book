@@ -296,4 +296,3 @@ class StudentDeleteView(DeleteView):
         return super(StudentDeleteView,self).post(request,*args,**kwargs)
 
 
-

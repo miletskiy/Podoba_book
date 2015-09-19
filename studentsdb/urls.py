@@ -27,6 +27,8 @@ from students.views.students import StudentUpdateView,StudentDeleteView
 # Domashka 365
 from students.views.groups import GroupDeleteView
 
+from students.views.journal import JournalView
+
 urlpatterns = patterns('',
     # Students urls
     	# url(r'^students/add/$', 'students.views.students_edit',
@@ -71,10 +73,9 @@ urlpatterns = patterns('',
      #     name='groups_delete'),
 
 
-
-
     # Journal urls
-	url(r'^journal/$', 'students.views.journal.journal_list', name='journal'),
+	# url(r'^journal/$', 'students.views.journal.journal_list', name='journal'),
+    url(r'^journal/$', JournalView.as_view(), name='journal'),
 
     # Exams Listing urls
 	url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
@@ -85,6 +86,7 @@ urlpatterns = patterns('',
 	url(r'^exams/(?P<eid>\d+)/delete/$',
          'students.views.exams.exams_delete',
          name='exams_delete'),
+
 
     # Contact Admin Form
     # url(r'^contact-admin/$', 'students.views.contact_admin.contact_admin',
