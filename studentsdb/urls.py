@@ -17,12 +17,16 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from students.views.testview import StudentList
 
-# Domashka 352
-from students.views.admin_kontakt_class import KontaktForm
-from students.views.contact_admin_class import ContactAdmin
+# from students.views.contact_admin_class import ContactAdmin
 
-# str357
-from students.views.students import StudentUpdateView,StudentDeleteView
+# Domashka 343
+from students.views.contact import KontaktView
+
+# Domashka 352
+from students.views.kontakt_admin_class import KontaktAdmin
+
+# str361
+from students.views.students import StudentUpdateView,StudentDeleteView ,StudentAddView
 
 # Domashka 365
 from students.views.groups import GroupDeleteView
@@ -34,7 +38,11 @@ urlpatterns = patterns('',
     	# url(r'^students/add/$', 'students.views.students_edit',
     url(r'^$', 'students.views.students.students_list', name='home'),
 
-    url(r'^students/add/$', 'students.views.students.students_add',
+    # url(r'^students/add/$', 'students.views.students.students_add',
+    #      name='students_add'),StudentUpdateView
+
+# domashka 361
+    url(r'^students/add/$', StudentAddView.as_view(),
          name='students_add'),
 
     # url(r'^students/(?P<sid>\d+)/edit/$',
@@ -75,7 +83,7 @@ urlpatterns = patterns('',
 
     # Journal urls
 	# url(r'^journal/$', 'students.views.journal.journal_list', name='journal'),
-    url(r'^journal/$', JournalView.as_view(), name='journal'),
+    url(r'^journal/(?P<pk>\d+)?/?$', JournalView.as_view(), name='journal'),
 
     # Exams Listing urls
 	url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
@@ -89,21 +97,22 @@ urlpatterns = patterns('',
 
 
     # Contact Admin Form
-    # url(r'^contact-admin/$', 'students.views.contact_admin.contact_admin',
-    #         name='contact_admin'),
-    url(r'^contact-admin/$', ContactAdmin.as_view(),
+    url(r'^contact-admin/$', 'students.views.contact_admin.contact_admin',
             name='contact_admin'),
+    # url(r'^contact-admin/$', KontaktAdmin.as_view(),
+    #         name='contact_admin'),
 
     # test form
     url(r'^student-list/$', StudentList.as_view()),
 
-# Domashka 352
-#     url(r'^kontakt/$', KontaktForm.as_view(),
-#         name='kontakt'),
-
-    # url(r'^contact/', include('contact_form.urls')),
-
+# Domashka 343
+#     url(r'^contact/', include('contact_form.urls')),
+    # url(r'^contact/',KontaktView.as_view(),name='kontakt'),
     # url(r'contact/', KontaktAdmin.as_view(), name='contact_form'),
+
+# Domashka 352
+    url(r'^kontakt/$', KontaktAdmin.as_view(),
+        name='kontakt'),
 
 	#Default admin url
     url(r'^admin/', include(admin.site.urls)),

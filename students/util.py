@@ -1,5 +1,6 @@
-
+# -*- coding: utf-8 -*-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import urllib
 
 
 def paginate(objects, size, request, context, var_name='object_list'):
@@ -30,3 +31,48 @@ def paginate(objects, size, request, context, var_name='object_list'):
     context['paginator'] = paginator
 
     return context
+
+# from .models.group import Group
+def get_groups(request):
+    """Returns list of existing groups"""
+    # deferred import of Group model to avoid cycled imports
+    from .models.group import Group
+
+    # get currently selected group
+    cur_group = get_current_group(request)
+
+    groups = []
+    # groups = Group.objects.all().order_by('title')
+    for group in Group.objects.all().order_by('title'):
+        groups.append({
+            'id': group.id,
+            'title': group.title,
+            'starosta': group.starosta and (u'%s %s' % (group.starosta.first_name,
+                group.starosta.last_name)) or None,
+            'selected': cur_group and cur_group.id == group.id and True or False
+        })
+    return groups
+    # return Group.objects.all().order_by('title')
+
+
+def get_current_group(request):
+    """Returns currently selected group or None"""
+
+    # we remember selected group in a cookie
+    kp = request.COOKIES.get('current_group')
+
+    # pk = 2
+    if kp:
+        pk=urllib.unquote(kp).strip()
+        from .models.group import Group
+        try:
+            # group = Group.objects.get(pk=int(qw))
+            group = Group.objects.get(pk=int(pk))
+        except Group.DoesNotExist:
+            return None
+        else:
+            return group
+    else:
+        return None
+
+        

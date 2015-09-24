@@ -27,20 +27,23 @@ border-top: 1px solid #dddddd;
    height: 30px;
    line-height: 30px;
    color: #555555;
- }
+}
+
 #group-selector { 
   margin-top: 30px;
-￼}
+}
 
 /* Form Styles */
 textarea,
 select,
 input{
-    max-width: 300px;
+    max-width: 380px;
+}
 /*    border: 5px solid red !important;
     background-color:red ;
 */￼
-}
+
+
 
 /*Add bold to main menu tabs. Do not works.
 #sub-header>.col-xs-12>.nav>.my-bold{
@@ -59,7 +62,9 @@ th.day-header {
     text-align: center;
 }
 
-
+#ajax-progress-indicator {
+  display: none;
+}
 
 
 

@@ -1,51 +1,33 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django import forms
 
-from django.core.mail import send_mail
+
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from ..models.student import Student
 from ..models.group import Group
 
-from studentsdb.settings import ADMIN_EMAIL
-
-# from crispy_forms.helper import FormHelper
-# from crispy_forms.layout import Submit
-
 from django.contrib import messages
-# from contact_form.forms import ContactForm
 
-# class KontaktForm(contact_form.forms.ContactForm):
+from django import forms
 
+from django.forms import ModelForm
 
-class StudentEdit(forms.Form):
+# class StudentEdit(ModelForm):forms.Form
+#     class Meta:
+#         model = Student
+#         fields = '__all__'
 
-    # def __init__(self, *args, **kwargs):
-    #     # call original initializator
-    #     super(ContactForm, self).__init__(*args, **kwargs)
+class StudentEdit(ModelForm):
+    class Meta:
+        model=Student
+        fields = []
 
-    #     # this helper object allows us to customize form
-    #     self.helper = FormHelper()
-
-    #     # form tag attributes
-    #     self.helper.form_class = 'form-horizontal col-xs-10'
-    #     self.helper.form_method = 'post'
-    #     self.helper.form_action = reverse('contact_admin')
-
-    #     # twitter bootstrap styles
-    #     self.helper.help_text_inline = True
-    #     self.helper.html5_required = True
-    #     self.helper.label_class = 'col-sm-2 control-label'
-    #     self.helper.field_class = 'col-sm-10'
-
-    #     # form buttons
-    #     self.helper.add_input(Submit('send_button', u'Надіслати'))
     groups = Group.objects.all().order_by('title')
 
-    # student = Student.objects.all().filter_by(pk=request.POST['pk'])
+    # student = Student.objects.all()
 
     first_name = forms.CharField(
         label=u"Имя",
@@ -70,19 +52,11 @@ class StudentEdit(forms.Form):
         max_length=2560,
         widget=forms.Textarea)
 
-    student_group = forms.ModelChoiceField(groups)
+    student_group = forms.ModelChoiceField(
+        groups,
+        empty_label=u"Выберите группу",
+        label=u"Група студента")
 
-    # from_email = forms.EmailField(
-    #     label=u"Ваша емейл адреса")
-
-    # subject = forms.CharField(
-    #     label=u"Заголовок листа",
-    #     max_length=128)
-
-    # message = forms.CharField(
-    #     label=u"Дополнительные заметки",
-    #     max_length=2560,
-    #     widget=forms.Textarea)
 
 
 def student_edit(request,pk):

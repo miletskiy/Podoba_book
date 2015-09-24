@@ -23,13 +23,19 @@
  {% block status_message %}
 
     {% if messages %}
-        <div class="alert alert-success">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
- {% endif %}
 
+          
+          {% for message in messages %}
+          
+          <div class="alert alert-warning">
+            {% if messages.error %} {{ message }}{% endif %}
+          </div>
+          
+          {% endfor %}
+
+     {% endif %}
+
+  
  {% endblock status_message %}
 
 {% block content %}
@@ -72,6 +78,7 @@
                 <td>{{ groups.start_index|add:forloop.counter0 }}</td> 
 
                   <td><a title="Редагувати" href={% url 'groups_edit' group.id %}>{{ group.title }}</a></td>
+                  <!--TODO:fix student_edit id-->
                   <td><a title="Редагувати" href={% url 'students_edit' group.id %}>{{ group.starosta }}</a></td>
 
                 <td>

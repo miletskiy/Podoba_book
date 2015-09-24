@@ -3,8 +3,8 @@
 # Create your views here.
 from django.shortcuts import render
 from django.http import HttpResponse , HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
+from django.core.urlresolvers import reverse, reverse_lazy
+# from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 
 from ..models.student import Student
 from ..models.group import Group
@@ -12,9 +12,9 @@ from ..models.group import Group
 
 from datetime import datetime
 
-from django.views.generic import UpdateView, DeleteView
+from django.views.generic import UpdateView, DeleteView, CreateView
 
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm
 
 from crispy_forms.helper import FormHelper 
 from crispy_forms.layout import Submit
@@ -23,8 +23,19 @@ from crispy_forms.bootstrap import FormActions
 from django.contrib import messages
 from django.contrib.messages import get_messages
 
+from ..util import paginate, get_current_group
+
+# from .student_edit import StudentEdit 357
+
 def students_list(request):
-    students = Student.objects.all().order_by('last_name')
+    # check if we need to show only one group of students 
+    current_group = get_current_group(request)
+    if current_group:
+        students = Student.objects.filter(student_group=current_group)
+    else:
+        # otherwise show all students
+        students = Student.objects.all().order_by('last_name')
+
 
     # try to order students list
     order_by = request.GET.get('order_by', '')
@@ -34,21 +45,27 @@ def students_list(request):
             students = students.reverse()
 
     # paginate students
-    paginator = Paginator(students, 3)
-    page = request.GET.get('page')
-    try:
-        students = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        students = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver
-        # last page of results.
-        students = paginator.page(paginator.num_pages)
+    # paginator = Paginator(students, 3)
+    # page = request.GET.get('page')
+    # try:
+    #     students = paginator.page(page)
+    # except PageNotAnInteger:
+    #     # If page is not an integer, deliver first page.
+    #     students = paginator.page(1)
+    # except EmptyPage:
+    #     # If page is out of range (e.g. 9999), deliver
+    #     # last page of results.
+    #     students = paginator.page(paginator.num_pages)
 
 
+    # apply pagination, 3 students per page
+    context = paginate(students, 3, request, {},
+        var_name='students')
+
+    # return render(request,'students/students_list.html',
+    #     {'students':students})    
     return render(request,'students/students_list.html',
-        {'students':students})
+        context)
 
 # Views for students
 # def students_list(request):
@@ -126,9 +143,19 @@ def students_add(request):
                     data['student_group'] = groups[0]
 
             photo = request.FILES.get('photo') 
-            if photo:
-                    data['photo'] = photo
+            # validation with Django built-methods
 
+            if photo:
+                file_extensions = ['jpeg','.jpg','.png','.gif']
+                name_file = str(photo.name)
+                # typed = str(photo.content_type)
+                if photo.multiple_chunks():
+                    errors['photo'] = u"Занадто великий файл. Максимум 2.5 Mb"
+                elif name_file[-4:] not in file_extensions:
+                    errors['photo'] = u"Невірний формат файлу. Оберіть зображення *.jpg, *.jpeg, *.png, *.gif" 
+                    # errors['photo'] = str(photo.name) 
+                else:
+                    data['photo'] = photo
             # if data correct:
             if not errors:
                 # add student to base
@@ -189,6 +216,45 @@ def students_delete(request,sid):
     return HttpResponse('<h1>Delete Student %s</h1>' % sid)
 
 
+        # using class for add student
+
+class StudentAddForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+    def __init__(self,*args, **kwargs):
+        super(StudentAddForm,self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+
+            # return HttpResponseRedirect(
+            #     u'%s?status_message=5' %  reverse('home'))
+
+
+        # set form tag attributes
+        # self.helper.form_action = reverse('students_add')
+        self.helper.form_action = u'%s?status_message=5' % reverse('students_add')
+
+        self.helper.form_method = 'POST'
+        self.helper.form_class = 'col-sm-12 form-horizontal'
+
+        # set form field properties
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.label_class = 'col-sm-2 control-label'
+        self.helper.field_class = 'col-sm-8'
+
+        # add buttons
+        # self.helper.layout.fields.append(self)
+        self.helper.layout.fields.append(FormActions(
+            Submit('add_button', u'Додати', css_class="btn btn-primary"),
+            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+        ))
+
+
+
+
 class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
@@ -224,6 +290,35 @@ class StudentUpdateForm(ModelForm):
         # )
 
 
+class StudentAddView(CreateView):
+    model = Student
+    # fields = '__all__'
+    template_name = 'students/students_edit.html'
+    form_class = StudentAddForm
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def post(self, request, *args, **kwargs):
+
+        if request.POST.get('cancel_button'):
+
+            messages.error(request, u'Додавання студента messag відмінено! es!' )
+
+            return HttpResponseRedirect(reverse('home'))
+
+        else:
+            fn=request.POST['first_name']
+            ln=request.POST['last_name']
+            storage = get_messages(request) #removing all messages thanks Ivan Savchenko
+            for message in storage:
+                pass
+            messages.success(request, u'Студента %s %s успішно messages збережено  ! !' % (fn, ln) )
+
+            return super(StudentAddView, self).post(request, *args, **kwargs)
+
+
+
 class StudentUpdateView(UpdateView):
     # class Meta:
     #     """docstring for Meta"""
@@ -234,6 +329,7 @@ class StudentUpdateView(UpdateView):
     template_name = 'students/students_edit.html'
     # fields = {'first_name', 'last_name', 'middle_name', 'student_group', 'birthday', 'photo', 'ticket', 'notes'}
     form_class = StudentUpdateForm
+    # form_class = StudentEdit
 
     def get_success_url(self):
         return reverse('home')
@@ -248,7 +344,7 @@ class StudentUpdateView(UpdateView):
         #     % reverse('home')
 
     def post(self, request, *args, **kwargs):
-        # stud = self.get_object()
+        stud = self.get_object()
         # group = Group.objects.filter(pk=stud.student_group.id)
         # number = group.id
         # stgr = stud.student_group

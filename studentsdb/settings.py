@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django.contrib.sites.models',
     'crispy_forms',
     'students',
 )
@@ -68,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "students.context_processors.groups_processor",
+                "studentsdb.context_processors.students_proc",
             ],
         },
     },
@@ -108,10 +111,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
-    "django.core.context_processors.request",
-    "studentsdb.context_processors.students_proc",)
+# TEMPLATE_CONTEXT_PROCESSORS = \
+#     global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+#         "django.core.context_processors.request",
+#         "students.context_processors.groups_processor",
+#         "studentsdb.context_processors.students_proc",)
 
+# PORTAL_URL = 'http://www.mysite.com'
 PORTAL_URL = 'http://localhost:8000'
 
 MEDIA_URL = '/media/'
@@ -121,11 +127,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'..','media')
 # email settings
 # please, set here you smtp server details and your admin email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = '/data/work/buildouts/python/studentsdb/src/studentsdb/studentsdb/mylo' # change this to a proper location
 ADMIN_EMAIL = 's.miletskiy@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_HOST_USER = 's.miletskiy@gmail.com'
-EMAIL_HOST_PASSWORD = '**********'
+EMAIL_HOST_PASSWORD = '******'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 

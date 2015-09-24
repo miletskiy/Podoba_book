@@ -29,6 +29,6 @@ class Group(models.Model):
 
     def __unicode__(self):
         if self.starosta:
-            return u"%s (%s %s)" % (self.title, self.starosta.first_name, self.starosta.last_name)
+            return u"%s (староста %s %s)" % (self.title, self.starosta.first_name, self.starosta.last_name)
         else:
             return u"%s" % (self.title,)

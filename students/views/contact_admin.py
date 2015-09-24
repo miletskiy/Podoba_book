@@ -69,8 +69,10 @@ def contact_admin(request):
             try:
                 send_mail(subject, message, from_email, [ADMIN_EMAIL])
             except Exception:
-                message = u"Під час відправки листа виникла непередбачувана помилка. \
-                Спробуйте скористатись даною формою пізніше. "
+                # message = u"Під час відправки листа виникла непередбачувана помилка. \
+                # Спробуйте скористатись даною формою пізніше. "
+                messages.error(request,u"Під час відправки листа виникла непередбачувана помилка. \
+                 Спробуйте скористатись даною формою пізніше. " )
             else:
                 # message = u"Повідомлення успішно надіслане!"
                 # message = u"Повідомлення успішно надіслане!"
@@ -79,7 +81,7 @@ def contact_admin(request):
             # redirect to same contact page with success message
             # return HttpResponseRedirect(
             #     u'%s?status_message=%s' % (reverse('contact_admin'),message))
-            return HttpResponseRedirect(reverse('contact_admin'),messages)
+            return HttpResponseRedirect(reverse('contact_admin'))
 
     # if there was not POST render blank form
     else:

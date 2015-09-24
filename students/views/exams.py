@@ -8,10 +8,20 @@ from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 
 from ..models.exam import Exam
 
+from ..util import  get_current_group 
+
 # Views for Exams
 def exams_list(request):
+   # check if we need to show only one group of students 
+    current_group = get_current_group(request)
+    if current_group:
+        exams = Exam.objects.filter(exam_group=current_group)
+        # exams=[current_group]
+    else:
+        # otherwise show all students
+        exams = Exam.objects.all().order_by('nazva')
+        # students = Student.objects.all().order_by('last_name')
 
-    exams = Exam.objects.all().order_by('nazva')
 
     # Order exams list
     order_by = request.GET.get('order_by', '')

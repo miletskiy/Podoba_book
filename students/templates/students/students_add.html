@@ -4,6 +4,7 @@
 
 {% block meta_title %}Додати студента{% endblock meta_title %}
 
+
 {% block title %}Додати студента{% endblock title %}
 
 <!--
@@ -69,23 +70,38 @@
   <div class="col-sm-10">
     <input type="text" value="{{ request.POST.middle_name }}"
            name="middle_name" id="middle_name"
-           placeholder="Введіть ваше По-батькові" 
+           placeholder="Введіть по-батькові студента"
            class="form-control"/>
       <span class="help-block">{{ errors.middle_name }}</span>
     </div><!--    <span class="help-block">{{ errors.middle_name }}</span>-->
   </div>
   
-  <div class="form-group {% if errors.birthday %}has-error{% endif %}">
-       <label for="birthday" class="col-sm-2 control-label">Дата Народження*</label>
-       <div class="col-sm-10">
-   <input type="text" value="{{ request.POST.birthday }}"
-           name="birthday" id="birthday"
-          placeholder="Наприклад 1984-12-30"
-          class="form-control" />
-    <span class="help-block">{{ errors.birthday }}</span>
-    </div> 
-   </div>
-  
+    
+    <div class="form-group {% if errors.birthday %}has-error{% endif %}">
+         <label for="id_birthday" class="col-sm-2 control-label">Дата Народження*</label>
+         <!-- Need refactoring width styles  -->
+         <div class="input-group date  col-sm-5">
+         <!-- Need refactoring width styles  -->
+             <input type="text" value="{{ request.POST.birthday }}"
+                name="birthday" id="id_birthday"
+                placeholder="Наприклад 1984-12-30"
+                class="form-control dateinput" />
+              <span class="input-group-addon ">
+                    <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+                
+            <span class="help-block">{{ errors.birthday }}</span>
+      </div> 
+     </div>
+  <div class="col-sm-12">
+  </div>
+            <!--
+              <span class="fa fa-calendar">
+        <span class="input-group-addon ">
+        <i class="glyphicon glyphicon-th"></i>
+                              </span> -->
+
+
   <div class="form-group {% if errors.photo %}has-error{% endif %}">
     <label for="photo" class="col-sm-2 control-label">Фото</label>
     <div class="col-sm-10">
@@ -141,6 +157,7 @@
     </div>
   </div>
  </form>
+
 
 {% endblock content %}
 
