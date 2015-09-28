@@ -86,6 +86,7 @@ class GroupFormAdmin(ModelForm):
         # if self.cleaned_data['starosta'] != students[0]:
         # if self.cleaned_data['starosta'] not in students:# and len(students) > 0:
         if self.cleaned_data['starosta'] in students or self.cleaned_data['starosta'] is None:# and len(students) > 0:
+        # if self.cleaned_data['starosta'] in students :# and len(students) > 0:
             return self.cleaned_data['starosta']
         else:
             raise ValidationError(u'Студент не належить до обранои групи.\

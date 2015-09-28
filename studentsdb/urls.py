@@ -28,10 +28,12 @@ from students.views.kontakt_admin_class import KontaktAdmin
 # str361
 from students.views.students import StudentUpdateView,StudentDeleteView ,StudentAddView
 
-# Domashka 365
-from students.views.groups import GroupDeleteView
+# Domashka 365 GroupDeleteView
+from students.views.groups import GroupAddView, GroupEditView, GroupDeleteView
 
 from students.views.journal import JournalView
+
+from students.views.exams import ExamAddView,ExamEditView,ExamDeleteView
 
 urlpatterns = patterns('',
     # Students urls
@@ -53,46 +55,65 @@ urlpatterns = patterns('',
          name='students_edit'),
 
 # Domashka 357
-    url(r'^students/(?P<pk>\d+)/edit1/$',
-         'students.views.student_edit.student_edit' ,
-         name='students_edit1'),
+#     url(r'^students/(?P<pk>\d+)/edit1/$',
+#          'students.views.student_edit.student_edit' ,
+#          name='students_edit1'),
 
     
     # url(r'^students/(?P<sid>\d+)/delete/$',
     #      'students.views.students.students_delete',
     #      name='students_delete'),
-    url(r'^students/(?P<pk>\d+)/delete/$',
-         StudentDeleteView.as_view(),
+    # url(r'^students/(?P<pk>\d+)/delete/$',
+    #      StudentDeleteView.as_view(),
+    #      name='students_delete'),
+
+	url(r'^students/(?P<pk>\d+)/delete/$',
+         'students.views.students.students_delete_my',
          name='students_delete'),
 
     # Groups Listing urls
 	url(r'^groups/$', 'students.views.groups.groups_list', name='groups'),
-	url(r'^groups/add/$', 'students.views.groups.groups_add',
+
+    url(r'^groups/add/$', GroupAddView.as_view(),
          name='groups_add'),
-	url(r'^groups/(?P<gid>\d+)/edit/$','students.views.groups.groups_edit',
-		name='groups_edit'),
+	# url(r'^groups/add/$', 'students.views.groups.groups_add',
+ #         name='groups_add'),
+
+    url(r'^groups/(?P<pk>\d+)/edit/$',GroupEditView.as_view(),
+        name='groups_edit'),
+	# url(r'^groups/(?P<pk>\d+)/edit/$','students.views.groups.groups_edit',
+	# 	name='groups_edit'),
 
 	url(r'^groups/(?P<pk>\d+)/delete/$',
-         'students.views.groups.groups_delete_my',
+         GroupDeleteView.as_view(),
          name='groups_delete'),
-
-	# url(r'^groups/(?P<pk>\d+)/delete/$',
-     #     GroupDeleteView.as_view(),
-     #     name='groups_delete'),
+    # url(r'^groups/(?P<pk>\d+)/delete/$',
+ #         'students.views.groups.groups_delete_my',
+ #         name='groups_delete'),
 
 
     # Journal urls
 	# url(r'^journal/$', 'students.views.journal.journal_list', name='journal'),
     url(r'^journal/(?P<pk>\d+)?/?$', JournalView.as_view(), name='journal'),
 
+
     # Exams Listing urls
 	url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
-	url(r'^exams/add/$', 'students.views.exams.exams_add',
+
+    # url(r'^exams/add/$', 'students.views.exams.exams_add',
+    #      name='exams_add'),	
+    url(r'^exams/add/$', ExamAddView.as_view(),
          name='exams_add'),
-	url(r'^exams/(?P<eid>\d+)/edit/$','students.views.exams.exams_edit',
-		name='exams_edit'),
-	url(r'^exams/(?P<eid>\d+)/delete/$',
-         'students.views.exams.exams_delete',
+
+    # url(r'^exams/(?P<eid>\d+)/edit/$','students.views.exams.exams_edit',
+    #     name='exams_edit'),	
+    url(r'^exams/(?P<pk>\d+)/edit/$', ExamEditView.as_view(),
+    		name='exams_edit'),
+
+	# url(r'^exams/(?P<eid>\d+)/delete/$',
+ #         'students.views.exams.exams_delete',
+ #         name='exams_delete'),
+    url(r'^exams/(?P<pk>\d+)/delete/$', ExamDeleteView.as_view(),
          name='exams_delete'),
 
 

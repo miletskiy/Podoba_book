@@ -6,36 +6,14 @@
 
 {% block title %}Групи{% endblock title %}
 
-<!--
-{% block subheader %}
-         Start subheader 
-        <div class="row" id="sub-header"> 
-          <div class="col-xs-12">
-            <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" ><a href={% url "home" %}>Студенти</a></li>
-              <li role="presentation"><a href="/journal">Відвідування</a></li>
-              <li role="presentation" class="active"><a href={% url "groups" %}>Групи</a></li>
-            </ul>
-          </div>
-        </div>
-{% endblock subheader %}
--->
- {% block status_message %}
-
+{% block status_message %}
     {% if messages %}
-
-          
           {% for message in messages %}
-          
           <div class="alert alert-warning">
-            {% if messages.error %} {{ message }}{% endif %}
+             {{ message }}
           </div>
-          
           {% endfor %}
-
      {% endif %}
-
-  
  {% endblock status_message %}
 
 {% block content %}
@@ -79,7 +57,17 @@
 
                   <td><a title="Редагувати" href={% url 'groups_edit' group.id %}>{{ group.title }}</a></td>
                   <!--TODO:fix student_edit id-->
-                  <td><a title="Редагувати" href={% url 'students_edit' group.id %}>{{ group.starosta }}</a></td>
+                  <td><a title="Редагувати" href=
+                          {% if group.starosta.id  %}
+                          {% url 'students_edit' group.starosta.id %}
+                      {% else %}
+                      {% url 'groups_edit' group.id  %}
+                      {% endif %}
+                      >{{ group.starosta }}</a></td>
+
+
+
+
 
                 <td>
                 

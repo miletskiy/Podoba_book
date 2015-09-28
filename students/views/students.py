@@ -1,9 +1,9 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Create your views here.
 from django.shortcuts import render
-from django.http import HttpResponse , HttpResponseRedirect
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse   #,reverse_lazy
 # from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 
 from ..models.student import Student
@@ -24,6 +24,8 @@ from django.contrib import messages
 from django.contrib.messages import get_messages
 
 from ..util import paginate, get_current_group
+
+# from django.forms import ValidationError
 
 # from .student_edit import StudentEdit 357
 
@@ -59,7 +61,7 @@ def students_list(request):
 
 
     # apply pagination, 3 students per page
-    context = paginate(students, 3, request, {},
+    context = paginate(students, 5, request, {},
         var_name='students')
 
     # return render(request,'students/students_list.html',
@@ -233,8 +235,8 @@ class StudentAddForm(ModelForm):
 
 
         # set form tag attributes
-        # self.helper.form_action = reverse('students_add')
-        self.helper.form_action = u'%s?status_message=5' % reverse('students_add')
+        self.helper.form_action = reverse('students_add')
+        # self.helper.form_action = u'%s?status_message=5' % reverse('students_add')
 
         self.helper.form_method = 'POST'
         self.helper.form_class = 'col-sm-12 form-horizontal'
@@ -253,7 +255,7 @@ class StudentAddForm(ModelForm):
         ))
 
 
-
+ # using class for add student
 
 class StudentUpdateForm(ModelForm):
     class Meta:
@@ -310,10 +312,13 @@ class StudentAddView(CreateView):
         else:
             fn=request.POST['first_name']
             ln=request.POST['last_name']
-            storage = get_messages(request) #removing all messages thanks Ivan Savchenko
-            for message in storage:
-                pass
-            messages.success(request, u'Студента %s %s успішно messages збережено  ! !' % (fn, ln) )
+            # if StudentAddView().form_valid(form):
+            # TODO: add validation fields --- form_valid
+            if fn and ln:
+                storage = get_messages(request) #removing all messages thanks Ivan Savchenko
+                for message in storage:
+                    pass
+                messages.success(request, u'Студента %s %s успішно messages збережено  ! !' % (fn, ln) )
 
             return super(StudentAddView, self).post(request, *args, **kwargs)
 
@@ -345,9 +350,11 @@ class StudentUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         stud = self.get_object()
-        # group = Group.objects.filter(pk=stud.student_group.id)
+        # group = Group.objects.filter(starosta=stud)
         # number = group.id
         # stgr = stud.student_group
+        # errors = {}
+        # pk= stud.id
 
         if request.POST.get('cancel_button'):
             # return HttpResponseRedirect(
@@ -360,18 +367,33 @@ class StudentUpdateView(UpdateView):
             return HttpResponseRedirect(reverse('home'),messages)
 
         else:
-            # messages.success(request, u'Студента успішно збережено! messages!')
-            storage = get_messages(request) #removing all messages thanks Ivan Savchenko
-            for message in storage:
-                pass
-            messages.success(request, u'Студента %s успішно збережено! messages!' % stud)
-            # Validation
-            # if stud.student_group
-            # if group[0].starosta != stud:
-            #     raise ValidationError(u'Студент є старостою іншої групи.',
-            #     code='invalid')
+
+            # if len(group) > 0 and stud.student_group !=  group :
+            #     # raise ValidationError(u'Студент є старостою іншої групи.',
+            #     #     code='invalid')
+            #     errors['student_group']= u'Студент є старостою іншої групи.'
+            #
+            #     storage = get_messages(request) #removing all messages thanks Ivan Savchenko
+            #     for message in storage:
+            #         pass
+            #     messages.success(request, u'Студент %s є старостою іншої групи.  message ' % stud)
+            #
+            #     # return HttpResponseRedirect(reverse('groups'),messages)
+            #     return HttpResponseRedirect(reverse('students_edit',kwargs={'pk':pk}))
+                # return super(StudentUpdateView, self).post(request, *args, **kwargs)
+            # else:
+            # TODO:add validation fields  ---form_valid
+            if request.POST['first_name'] and request.POST['last_name']:
+                storage = get_messages(request) #removing all messages thanks Ivan Savchenko
+                for message in storage:
+                    pass
+                messages.success(request, u'Iнформація студента %s успішно оновлена! messages!' % stud)
 
             return super(StudentUpdateView, self).post(request, *args, **kwargs)
+
+
+
+
 
 
 
@@ -392,3 +414,23 @@ class StudentDeleteView(DeleteView):
         return super(StudentDeleteView,self).post(request,*args,**kwargs)
 
 
+def students_delete_my(request, pk):
+    """ Delete student by hands """
+    
+    student = Student.objects.get(pk = pk)
+    fn = student.first_name
+    ln = student.last_name
+
+    if request.method == 'POST':
+        if request.POST.get('delete_button') is not None:
+            student.delete()
+            messages.success(request, u'Студента %s %s успішно messages видалено!! !' % (fn,ln))
+            return HttpResponseRedirect(reverse('home'))
+
+        elif request.POST.get('cancel_button') is not None:
+            messages.error(request, u'Видалення Студента %s %s скасовано messages!' % (fn,ln))
+            return HttpResponseRedirect(reverse('home'))
+
+    else:
+        return render(request,'confirm_delete/students_ruki_confirm_delete.html',
+                          {'student':student})
