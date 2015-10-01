@@ -39,6 +39,9 @@ select,
 input{
     max-width: 380px;
 }
+/*#id_exam_day{
+  max-width: 360px !important;
+}*/
 /*    border: 5px solid red !important;
     background-color:red ;
 */￼
@@ -62,11 +65,29 @@ th.day-header {
     text-align: center;
 }
 
-#ajax-progress-indicator {
+#ajax-progress-indicator,
+#ajax-progress-warmes {
   display: none;
+  text-align: center;
 }
-
-
+#ajaxBusy{
+  display: none;
+  paddingLeft:0px;
+  paddingRight:0px;
+  paddingTop:0px;
+  paddingBottom:0px;
+  position:absolute;
+  right:50%;
+  top:40%;
+  /*float:center;*/
+   width:auto;
+}
+/*  margin:"0px",
+  z-index:10000,
+  position:"absolute",
+  // top:"130px",
+  // left:"50%",
+*/
 
 
 

@@ -22,8 +22,8 @@ class JournalView(TemplateView):
 
         # check if we need to display some specific month
         if self.request.GET.get('month'):
-            month = datetime.strptime(self.request.GET['month'], '%Y-%m-%d'
-                ).date()
+            month = datetime.strptime(
+                self.request.GET['month'], '%Y-%m-%d').date()
         else:
             # otherwise just displaying current month data
             today = datetime.today()
@@ -139,6 +139,7 @@ class JournalView(TemplateView):
         journal.save()
 
         # return success status
+        # return JsonResponse({'key': 'value'})
         return JsonResponse({'status': 'success'})
 
 # from django.shortcuts import render

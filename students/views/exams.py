@@ -8,7 +8,7 @@ from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 
 from ..models.exam import Exam
 
-from ..util import  get_current_group 
+from ..util import  get_current_group, paginate
 
 from django.forms import ModelForm
 
@@ -39,28 +39,32 @@ def exams_list(request):
 
 
     # Order exams list
-    order_by = request.GET.get('order_by', '')
-    if order_by in ('id', 'nazva','exam_day','prepod'):
-        exams = exams.order_by(order_by)
-        if request.GET.get('reverse', '') == '1':
-            exams = exams.reverse()
+    # order_by = request.GET.get('order_by', '')
+    # if order_by in ('id', 'nazva','exam_day','prepod'):
+    #     exams = exams.order_by(order_by)
+    #     if request.GET.get('reverse', '') == '1':
+    #         exams = exams.reverse()
+    #
+    # # Paginate exams
+    # paginator = Paginator(exams, 4)
+    # page = request.GET.get('page')
+    # try:
+    #     exams = paginator.page(page)
+    # except PageNotAnInteger:
+    #     # If page is not an integer, deliver first page.
+    #     exams = paginator.page(1)
+    # except EmptyPage:
+    #     # If page is out of range (e.g. 9999), deliver
+    #     # last page of results.
+    #     exams = paginator.page(paginator.num_pages)
 
-    # Paginate exams
-    paginator = Paginator(exams, 4)
-    page = request.GET.get('page')
-    try:
-        exams = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        exams = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver
-        # last page of results.
-        exams = paginator.page(paginator.num_pages)
-
+    context = paginate(exams, 2, request, {},
+        var_name='exams')
 
     return render(request, 'students/exams_list.html',
-        {'exams': exams })
+        context)
+   # return render(request, 'students/exams_list.html',
+   #      {'exams': exams })
     
 def exams_add(request):
     return HttpResponse('<h1>Exam Add Form</h1>')
@@ -125,6 +129,7 @@ class ExamEditForm(ModelForm):
             Submit('edit_button', u'Зберегти', css_class="btn btn-primary"),
             Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
         ))
+        
 # Base view for Exams
 class BaseExamFormView(object):
     """docstring for BaseExamFormView"""

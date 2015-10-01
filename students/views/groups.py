@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.messages import get_messages
 
-from ..util import  get_current_group #paginate,
+from ..util import  get_current_group, paginate
 
 from django.forms import ModelForm
 
@@ -43,17 +43,17 @@ def groups_list(request):
             groups = groups.reverse()
 
     # Paginate groups
-    paginator = Paginator(groups, 5)
-    page = request.GET.get('page')
-    try:
-        groups = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        groups = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver
-        # last page of results.
-        groups = paginator.page(paginator.num_pages)
+    # paginator = Paginator(groups, 5)
+    # page = request.GET.get('page')
+    # try:
+    #     groups = paginator.page(page)
+    # except PageNotAnInteger:
+    #     # If page is not an integer, deliver first page.
+    #     groups = paginator.page(1)
+    # except EmptyPage:
+    #     # If page is out of range (e.g. 9999), deliver
+    #     # last page of results.
+    #     groups = paginator.page(paginator.num_pages)
 
     # groups_kolvo = paginator.page(paginator.count) не получилось((
 
@@ -68,8 +68,13 @@ def groups_list(request):
 #         'nazva':u'Мтм-23',
 #         'starosta':u'Иванов Андрей'},
 #     )
-    return render(request, 'students/groups_list.html',
-        {'groups': groups})
+    context = paginate(groups, 4, request, {},
+        var_name='groups')
+
+    # return render(request, 'students/groups_list.html',
+    #     {'groups': groups})
+
+    return render(request, 'students/groups_list.html', context)
     
 def groups_add(request):
     # return HttpResponse('<h1>Group Add Form</h1>')

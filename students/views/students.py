@@ -245,7 +245,7 @@ class StudentAddForm(ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.label_class = 'col-sm-2 control-label'
-        self.helper.field_class = 'col-sm-8'
+        self.helper.field_class = 'col-sm-8 input-group'
 
         # add buttons
         # self.helper.layout.fields.append(self)

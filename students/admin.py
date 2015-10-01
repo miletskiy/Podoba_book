@@ -34,7 +34,7 @@ class StudentAdmin(admin.ModelAdmin):
     # list_editable = ['student_group']
     ordering = ['last_name']
     list_filter = ['student_group']
-    list_per_page = 5
+    list_per_page = 7
     search_fields = ['last_name', 'first_name', 'middle_name', 'ticket',
         'notes']
     form = StudentFormAdmin
@@ -114,9 +114,24 @@ class GroupAdmin(admin.ModelAdmin):
     def view_on_site(self, obj):
         return reverse('groups_edit', kwargs={'pk': obj.id})
 
+# Change admin view for Groups
+class ExamAdmin(admin.ModelAdmin):
+    """Describe mapping for Group in admin"""
+    list_display = ['exam_day', 'nazva', 'prepod', 'exam_group']
+    list_display_links = ['exam_day', 'prepod']
+    list_editable = []
+    ordering = ['exam_day']
+    list_filter = ['prepod']
+    list_per_page = 7
+    search_fields = ['nazva', 'prepod','notes']
+    # form = GroupFormAdmin
+    # actions = ['make_krasivo', 'change_group','copy_student' ]
+
+    def view_on_site(self, obj):
+        return reverse('exams_edit', kwargs={'pk': obj.id})
 
 admin.site.register(Student,StudentAdmin)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(Exam)
+admin.site.register(Exam,ExamAdmin)
 admin.site.register(MonthJournal)
 

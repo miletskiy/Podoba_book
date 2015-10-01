@@ -29,7 +29,7 @@
 <!--<style type="text/css">.col-xs-12, .col-xs-4, .col-xs-6 {border: 1px solid red;}</style>-->
 <!-- Add Exam Button -->
 <div class="col-xs-7" style="margin: 2% 0 2% 0">
-  <a class="btn btn-primary" href={% url "exams_add" %}>Додати Icпит</a>
+  <a class="btn btn-primary exam-edit-form-link" href={% url "exams_add" %}>Додати Icпит</a>
   
 </div>
 
@@ -73,11 +73,13 @@
 
         {% for exam in exams %}
               <tr>
-                <td>{{ forloop.counter }}</td> 
+                <td>{{ exams.start_index|add:forloop.counter0 }}</td> 
                 <td>{{ exam.exam_day }}</td> 
-                <td><a href='{% url "exams_edit" exam.id %}'>{{ exam.nazva }}</td>
+                <td><a class="exam-edit-form-link"
+                       href='{% url "exams_edit" exam.id %}'>{{ exam.nazva }}</td>
                 <td>{{ exam.prepod }}</td>
-                <td><a href='{% url "groups_edit" exam.exam_group.id %}'>{{ exam.exam_group }}</td> 
+                <td><a class="group-edit-form-link"
+                       href='{% url "groups_edit" exam.exam_group.id %}'>{{ exam.exam_group }}</td> 
 
 
                 <td>
@@ -88,12 +90,14 @@
                     </button>
                   <ul class="dropdown-menu" role="menu">
                         <li role="presentation">
-                          <a role="menuitem" tabindex="-1" 
+                          <a role="menuitem" tabindex="-1"
+                             class="exam-edit-form-link"
                             href={% url "exams_add" %}>Додати</a>
                         </li>
                         <li role="presentation">
-                          <a role="menuitem" tabindex="-1" 
-                            href={% url "exams_edit" exam.id %}>Редагувати</a>
+                          <a role="menuitem" tabindex="-1"
+                             class="exam-edit-form-link"
+                             href={% url "exams_edit" exam.id %}>Редагувати</a>
                         </li>
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
@@ -109,29 +113,10 @@
         </table>
 <!-- End Students Listing -->
 
-<!--Navigation by page start-->
-    {% if exams.has_other_pages %}
+{% with object_list=exams %}
+  {% include "students/pagination.html" %}
+{% endwith %}
          
-         {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
-          <nav>
-            <ul class="pagination">
-              <li><a href="{% url "exams" %}?page=1&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&laquo;</a></li>
-              {% for p in exams.paginator.page_range %}
-              <li {% if exams.number == p %}class="active"{% endif %}>
-              <a href="{% url "exams" %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
-              </li>
-              {% endfor %}
-
-              <li><a href="{% url "exams" %}?page={{ exams.paginator.num_pages}}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">
-              &raquo;</a></li>
-            </ul> 
-          </nav>
-          {% endwith %}
-          
-    {% endif %}
-    
-<!--Navigation by page end-->
-          
 {% endblock content %}
 
 

@@ -19,7 +19,8 @@
 {% block content %}
               <!-- Add Student Button -->
 <div class="col-xs-7" style="margin: 2% 0 2% 0">
-              <a class="btn btn-primary" href={% url "groups_add" %}>Додати Групу</a>
+    <a class="btn btn-primary group-edit-form-link" 
+       href={% url "groups_add" %}>Додати Групу</a>
 </div>
 
 <!-- Start Students Listing -->
@@ -55,20 +56,16 @@
               <tr>
                 <td>{{ groups.start_index|add:forloop.counter0 }}</td> 
 
-                  <td><a title="Редагувати" href={% url 'groups_edit' group.id %}>{{ group.title }}</a></td>
-                  <!--TODO:fix student_edit id-->
+                  <td><a title="Редагувати групу" href={% url 'groups_edit' group.id %}
+                         class="group-edit-form-link">{{ group.title }}</a></td>
+                  <!--TODO:fix student_edit id.  DONE-->
                   <td><a title="Редагувати" href=
                           {% if group.starosta.id  %}
-                          {% url 'students_edit' group.starosta.id %}
-                      {% else %}
-                      {% url 'groups_edit' group.id  %}
-                      {% endif %}
+                            {% url 'students_edit' group.starosta.id %}
+                          {% else %}
+                            {% url 'groups_edit' group.id  %}
+                          {% endif %}
                       >{{ group.starosta }}</a></td>
-
-
-
-
-
                 <td>
                 
                 <div class="dropdown">
@@ -80,11 +77,12 @@
                   <ul class="dropdown-menu" role="menu">
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
-                            href="/journal/{{ student.id }}">Відвідування</a>
+                             href="/journal/{{ group.id }}">Відвідування</a>  
                         </li>
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
-                            href={% url 'groups_edit' group.id %}>Редагувати</a>
+                            href={% url 'groups_edit' group.id %}
+                             class="group-edit-form-link">Редагувати</a>
                         </li>
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
@@ -100,7 +98,11 @@
         </table>
 <!-- End Students Listing -->
 <!--Navigation by page start-->
-         {% include 'students/pagination_groups.html' %}
+{% with object_list=groups %}
+  {% include "students/pagination.html" %}
+{% endwith %}
+
+
 <!--
           <nav>
             <ul class="pagination">

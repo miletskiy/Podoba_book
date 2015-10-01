@@ -47,7 +47,7 @@ def get_groups(request):
         groups.append({
             'id': group.id,
             'title': group.title,
-            'starosta': group.starosta and (u'%s %s' % (group.starosta.first_name,
+            'starosta': group.starosta and (u'староста %s %s' % (group.starosta.first_name,
                 group.starosta.last_name)) or None,
             'selected': cur_group and cur_group.id == group.id and True or False
         })
