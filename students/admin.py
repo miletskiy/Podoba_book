@@ -29,7 +29,7 @@ class StudentFormAdmin(ModelForm):
 
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'ticket', 'student_group']
+    list_display = ['last_name', 'first_name', 'ticket', 'student_group','photo']
     list_display_links = ['last_name', 'first_name']
     # list_editable = ['student_group']
     ordering = ['last_name']
@@ -39,6 +39,9 @@ class StudentAdmin(admin.ModelAdmin):
         'notes']
     form = StudentFormAdmin
     actions = ['make_krasivo', 'change_group','copy_student' ]
+
+
+
 
 # Testoviy method for actions. domashka370
 
@@ -130,8 +133,8 @@ class ExamAdmin(admin.ModelAdmin):
     def view_on_site(self, obj):
         return reverse('exams_edit', kwargs={'pk': obj.id})
 
+
 admin.site.register(Student,StudentAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Exam,ExamAdmin)
 admin.site.register(MonthJournal)
-
