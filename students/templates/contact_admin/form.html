@@ -13,11 +13,12 @@
     Будь-ласка, виправте наступні помилки:
   </div>
 {% endif %}
-    {% if message %}
+    {% if messages %}
         {% for message in messages %}
-        <div class="{% if message.error %}alert alert-danger{% endif %}">{{ message }}
-            {% endfor %}
+        <div class="alert alert-warning">
+          {{ message }}
         </div>
+            {% endfor %}
  {% endif %}
 {% endblock %}
 

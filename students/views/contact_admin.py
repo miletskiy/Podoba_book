@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from django.shortcuts import render
 from django import forms
@@ -13,9 +14,13 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 from django.contrib import messages
+
+from django.dispatch import Signal
+# from students.signals import send_signal_email_for_admin
 # from contact_form.forms import ContactForm
 
 # class KontaktForm(contact_form.forms.ContactForm):
+
 
 
 class ContactForm(forms.Form):
@@ -53,6 +58,24 @@ class ContactForm(forms.Form):
         max_length=2560,
         widget=forms.Textarea)
 
+# Signal after sending mail to admin 526
+# Create signal.
+email_was_send = Signal(providing_args=['subject','email'])
+
+# These function is receiver. It will receive
+# the signal sent  by the sender.
+def simple_receiver(**kwargs):
+    # subject, email = kwargs['subject'], kwargs['email']
+    # print 'Receiver # 1'
+    # print '\tsubject: %s, email: %s\n' % (subject, email)
+    pass
+
+email_was_send.connect(simple_receiver)
+
+def send_signal_email_for_admin(subject,email):
+    email_was_send.send(sender='send_signal_email_for_admin', subject=subject, email=email)
+
+
 
 def contact_admin(request):
     # check if form was posted
@@ -73,7 +96,12 @@ def contact_admin(request):
                 # Спробуйте скористатись даною формою пізніше. "
                 messages.error(request,u"Під час відправки листа виникла непередбачувана помилка. \
                  Спробуйте скористатись даною формою пізніше. " )
+                logger = logging.getLogger(__name__)
+                logger.exception(message)
             else:
+                send_signal_email_for_admin(subject,from_email)
+                mail_logger=logging.getLogger('email_was_send')
+                mail_logger.info("Email from %s was send with next subject: %s", from_email, subject)
                 # message = u"Повідомлення успішно надіслане!"
                 # message = u"Повідомлення успішно надіслане!"
                 messages.success(request, u'messages Повідомлення успішно надіслане!! !')

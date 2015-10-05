@@ -126,14 +126,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'..','media')
 
 # email settings
 # please, set here you smtp server details and your admin email
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = '/data/work/buildouts/python/studentsdb/src/studentsdb/studentsdb/mylo' # change this to a proper location
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/data/work/buildouts/python/studentsdb/src/studentsdb/studentsdb/mylo' # change this to a proper location
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ADMIN_EMAIL = 's.miletskiy@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_HOST_USER = 's.miletskiy@gmail.com'
-EMAIL_HOST_PASSWORD = '******'
+EMAIL_HOST_PASSWORD = '********'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
@@ -171,9 +172,17 @@ LOGGING = {
             'formatter': 'simple'
         },
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': LOG_FILE,
+            'formatter': 'verbose'
+        },
+        'mail_admins': {
+            'level': 'INFO',
+            'class': 'django.utils.log.AdminEmailHandler',
+            # 'email_backend': 'django.core.mail.backends.filebased.EmailBackend',
+            'email_backend': 'django.core.mail.backends.console.EmailBackend',
+            'include_html': True,
             'formatter': 'verbose'
         },
     },
@@ -184,13 +193,27 @@ LOGGING = {
             'level': 'INFO',
         },
         'students.signals': {
-            'handlers': ['console', 'file'],
+            'handlers': ['mail_admins','file'],
             'level': 'INFO',
         },
         'students.views.contact_admin': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+        },
+        'email_was_send': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
-        }
+        },
+        'students.best': {
+            'handlers': ['mail_admins','file','console'],
+            'level': 'INFO',
+            # 'propagate': False,
+        },
+        # 'django.request': {
+        #     'handlers': ['file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # }
     }
 }
 
