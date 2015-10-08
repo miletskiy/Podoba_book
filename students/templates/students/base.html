@@ -7,10 +7,21 @@
     <title>Сервіс Обліку Студентів - {% block meta_title %}{% endblock meta_title %}</title> 
     <meta name="description" value="Система Обліку Студентів Навчального Закладу" />
     <!-- Dodaly styes -->
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href={{PORTAL_URL}}{% static "css/main.css" %}>
-<!--        <link rel="stylesheet" href="/static/css/main.css">-->
+
+  <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" >
+  <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.css">
+  <link rel="stylesheet" href={{PORTAL_URL}}{% static "css/main.css" %}>
+
+
+  <!--<link rel="stylesheet" href="https://github.com/moment/moment/blob/develop/locale/ru.js" %}>
+      <script src="https://github.com/moment/moment/blob/develop/locale/ru.js"></script>
+       <link rel="stylesheet" href="/static/css/main.css">
+
+      <script type="" src={% static "js/ru.js" %}></script>
+
+       -->
 
     <!--
      <style type="text/css">.col-xs-12, .col-xs-4, .col-xs-8 {border:1px solid red;}</style>
@@ -34,6 +45,7 @@
           <div class="col-xs-8"> 
             <h1>{% block logo %}Сервіс Обліку Студентів{% endblock logo %}</h1>
           </div>
+<!--          <div id='loader'><img src="static/img/me.jpeg"/></div>-->
          
           
 
@@ -44,8 +56,11 @@
             <strong>Група:</strong>
               <select>
                 <option value="">Усі Студенти</option>
-                <option value="">Мтм-21, Віталій Подоба</option>
-                <option value="">Мтм-22, Андрій Петров</option>
+                {% for group in GROUPS %}
+                  <option value=" {{ group.id }} " {% if group.selected %}selected="1"{% endif %}>
+                        {{ group.title }} {% if group.starosta %}, {{ group.starosta }}{% endif %}
+                  </option>
+                {% endfor %}
               </select>
           </div>
           {% endblock selector %}
@@ -58,7 +73,7 @@
 <!--         Start subheader -->
         <div class="row" id="sub-header"> 
           <div class="col-xs-12">
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs " role="tablist">
 
              {% url 'home' as url1 %}
               <!--<li role="presentation" {% ifequal request.path url1 %}class="active"{% endifequal %}>-->
@@ -68,64 +83,79 @@
 <!--                 request.path += 'order_by=last_name'-->
 <!--                 request.path = request.path|order_by=last_name-->
 
-              <li role="presentation" 
+              <li role="presentation"
               {% if request.path == url1 %}
-                class="active" 
+                class="active"
               {% endif %}>
-                  <a href={% url "home" %}>Студенти</a></li>
+                  <a class="glyphicon glyphicon-user" aria-hidden="true" href={% url "home" %}> <b>Студенти</b></a></li>
 <!--                  <a href="{% url "home" %}?order_by=last_name">Студенти</a></li>-->
 <!--                  <a href="{% url "home" %}?order_by=last_name{% if order_by == 'last_name' and reverse != '1' %}&amp;reverse=1{% endif %}">Студенти</a></li>                  -->
               {% url 'journal' as url2 %}
-              <li role="presentation" {% ifequal request.path url2 %}class="active"{% endifequal %}>
-                  <a href={% url "journal" %}>
-                    Відвідування
+              <li role="presentation" {% if url2 in request.path %}class="active"{% endif %}>
+<!--              <li role="presentation" {% ifequal request.path url2 %}class="active"{% endifequal %}>-->
+                  <a class="glyphicon glyphicon-calendar" href={% url "journal" %}>
+                    <b>Відвідування</b>
                   </a>
               </li>
               {% url 'groups' as url3 %}
               <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}>
-                  <a href={% url "groups" %}>Групи</a></li>
+                  <a class="glyphicon glyphicon-list" href={% url "groups" %}><b> Групи</b> </a></li>
               
                {% url 'exams' as url4 %}
               <li role="presentation" {% ifequal request.path url4 %}class="active"{% endifequal %}>
-                  <a href={% url "exams" %}>Icпити</a></li>
+                  <a class="glyphicon glyphicon-education" href={% url "exams" %}> <b>Icпити</b></a></li>
+                  
+              {% url 'log' as url6 %}
+              <li role="presentation" {% ifequal request.path url6 %}class="active"{% endifequal %}>
+            <a class="glyphicon glyphicon-transfer" href={% url "log" %}> <b>Події</b></a></li>
+              
+              {% url 'contact_admin' as url5 %}
+              <li role="presentation" {% ifequal request.path url5 %}class="active"{% endifequal %}>
+                  <a class="glyphicon glyphicon-envelope" href={% url "contact_admin" %}> <b>Контакт</b></a></li>
               
             </ul>
           </div>
         </div>
 <!-- End subheader -->
-<!-- Start Main Page Content -->  
-         <!-- Start Content Columns -->
-          <div class="row" id="content-columns">
-            <div class="col-xs-12" id="content-column"> 
-            <!-- Status Message -->
-            {% block status_message %}
-             {% if request.GET.status_message %}
-              <div class="alert alert-success" role="alert"> {{request.GET.status_message}}
-              </div>
-              {% endif %}
-            {% endblock %}
-<!-- End Content Columns -->
-             <div class="col-xs-3" style="float: left;"> 
-               <h2>{% block title %}{% endblock title %}</h2> 
-             </div>
-             
-<!--
-              <div class="col-xs-9" style="float: left;"> 
+<!-- Start Main Page Content -->
 
-              </div>
--->
-                
-               {% block content %}{% endblock content %}
-              </div>
+         <!-- Start Content Columns -->
+  <div class="row" id="content-columns">
+    <div class="col-xs-12" id="content-column"> 
+    <!-- Status Message -->
+    {% block status_message %}
+      {% if request.GET.status_message %}
+          <div class="alert alert-success" role="alert"> {{request.GET.status_message}}
+          </div>
+      {% endif %}
+    {% endblock %}
+          <!-- End Content Columns -->
+
+            <div class="col-xs-5" style="float: left;">
+               <h2>{% block title %}{% endblock title %}</h2> 
             </div>
+<!--
+              <div class="col-xs-9" style="float: left;">
+              </div>
+-->{% block content %}      {% endblock content %}
+      </div>
+    </div>
   <!-- End Main Page Content --><!-- End Content Columns -->
 
            <!-- Start Footer -->
            {% block footer %}
           <div class="row" id="footer"> 
-            <div class="col-xs-12">
-              &copy; 2015  Сервіс обліку cтудентів
+            <div class="col-xs-9">
+              &copy;  Сервіс обліку cтудентів - {% now "Y"%}
             </div>
+             
+              <div class="col-xs-3">
+                  {% now "j E  | z | l H:i " %}
+              </div>
+<!--<div id="ajaxBusy"><p><img src="http://preloaders.net/images/ajax-loader.gif"></p></div>-->
+<div id="ajaxBusy"><p><b>Йде збереження...</b></p></div>
+<!--<div id="ajaxBusy"><p><img src="http://4.bp.blogspot.com/-R8AvkGGuNyk/Vg1un7XRePI/AAAAAAAAM1U/fw83vclJHeY/s1600/ajax-loader-2.gif"></p></div>-->
+            <span id="ajax-progress-indicator"><b>Йде збереження...</b></span>
           </div>
           {% endblock footer %}
           <!-- End Footer -->
@@ -133,14 +163,61 @@
       <!-- END Container -->
       </div>
 
+<!-- Modal window for groups -->    
+
+<div class="modal fade" id="myModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Заголовок Редагувати групу </h4>
+      </div>
+      <div class="modal-body">
+        <p>Тут будет форма редактирования группы&hellip;</p>
+      </div>
+      <div class="modal-footer"> <!-- --></div>
+
+    </div><!-- /.modal-content --> 
+  </div> <!-- /.modal-dialog --> 
+</div><!-- .modal  --> 
+    
+
+    
+    
+    
+<!-- Modal Boilerplate -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel"><!-- --></h4>
+        </div>
+        <div class="modal-body"><!-- --></div>
+        <div class="modal-footer"> <!-- --></div>
+      </div>
+    </div>
+  </div>
+
 
 
       <!-- Javascripts Section --> <!-- Javascripts Inclusion -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
-      </script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
-      </script>
-    {% block extra_js %}{% endblock extra_js %}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+      <script type="" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/uk.js"></script>
+<!--      <script src="{% static "js/jquery.cookie.js" %}"></script>-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+      <link rel="stylesheet" href={{PORTAL_URL}}{% static "css/main.css" %}>
+      <script type="" src={% static "js/main.js" %}></script>
+    {% block extra_js %}
+    {% endblock extra_js %}
 
   </body>
 </html>

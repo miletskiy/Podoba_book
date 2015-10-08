@@ -6,25 +6,21 @@
 
 {% block title %}Групи{% endblock title %}
 
-<!--
-{% block subheader %}
-         Start subheader 
-        <div class="row" id="sub-header"> 
-          <div class="col-xs-12">
-            <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" ><a href={% url "home" %}>Студенти</a></li>
-              <li role="presentation"><a href="/journal">Відвідування</a></li>
-              <li role="presentation" class="active"><a href={% url "groups" %}>Групи</a></li>
-            </ul>
+{% block status_message %}
+    {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-warning">
+             {{ message }}
           </div>
-        </div>
-{% endblock subheader %}
--->
+          {% endfor %}
+     {% endif %}
+ {% endblock status_message %}
 
 {% block content %}
               <!-- Add Student Button -->
-<div class="col-xs-8" style="margin: 2% 0 2% 0">
-              <a class="btn btn-primary" href={% url "groups_add" %}>Додати Групу</a>
+<div class="col-xs-7" style="margin: 2% 0 2% 0">
+    <a class="btn btn-primary group-edit-form-link" 
+       href={% url "groups_add" %}>Додати Групу</a>
 </div>
 
 <!-- Start Students Listing -->
@@ -58,11 +54,18 @@
              
              {% for group in groups %}
               <tr>
-                <td>{{ forloop.counter }}</td> 
+                <td>{{ groups.start_index|add:forloop.counter0 }}</td> 
 
-                  <td><a title="Редагувати" href={% url 'groups_edit' group.id %}>{{ group.title }}</a></td>
-                  <td><a title="Редагувати" href={% url 'students_edit' group.id %}>{{ group.starosta }}</a></td>
-
+                  <td><a title="Редагувати групу" href={% url 'groups_edit' group.id %}
+                         class="group-edit-form-link">{{ group.title }}</a></td>
+                  <!--TODO:fix student_edit id.  DONE-->
+                  <td><a title="Редагувати" href=
+                          {% if group.starosta.id  %}
+                            {% url 'students_edit' group.starosta.id %}
+                          {% else %}
+                            {% url 'groups_edit' group.id  %}
+                          {% endif %}
+                      >{{ group.starosta }}</a></td>
                 <td>
                 
                 <div class="dropdown">
@@ -74,11 +77,12 @@
                   <ul class="dropdown-menu" role="menu">
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
-                            href="/journal/{{ student.id }}">Відвідування</a>
+                             href="/journal/{{ group.id }}">Відвідування</a>  
                         </li>
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
-                            href={% url 'groups_edit' group.id %}>Редагувати</a>
+                            href={% url 'groups_edit' group.id %}
+                             class="group-edit-form-link">Редагувати</a>
                         </li>
                         <li role="presentation">
                           <a role="menuitem" tabindex="-1" 
@@ -94,7 +98,11 @@
         </table>
 <!-- End Students Listing -->
 <!--Navigation by page start-->
-         {% include 'students/pagination_groups.html' %}
+{% with object_list=groups %}
+  {% include "students/pagination.html" %}
+{% endwith %}
+
+
 <!--
           <nav>
             <ul class="pagination">

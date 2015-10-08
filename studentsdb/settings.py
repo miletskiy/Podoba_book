@@ -33,17 +33,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'flat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites.models',
+    'crispy_forms',
     'students',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -62,10 +66,13 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                # 'django.template.context_processors.i18n',
+                'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                "students.context_processors.groups_processor",
+                "studentsdb.context_processors.students_proc",
             ],
         },
     },
@@ -91,28 +98,140 @@ from .database.db import DATABASES
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 # LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'uk'
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
-USE_L10N = True
+LANGUAGE_CODE = 'uk'
 
 USE_TZ = True
 
+TIME_ZONE = 'UTC'
+# TIME_ZONE = 'Europe/Kiev'
+
+USE_L10N = True
+
+# LOCALE_PATHS = (
+#     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/uk',
+#     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/en',
+# )
+# LOCALE_PATHS = (
+#     os.path.join(BASE_DIR, 'locale'),
+# )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 
-TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
-    "django.core.context_processors.request",
-    "studentsdb.context_processors.students_proc",)
+# TEMPLATE_CONTEXT_PROCESSORS = \
+#     global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+#         "django.core.context_processors.request",
+#         "students.context_processors.groups_processor",
+#         "studentsdb.context_processors.students_proc",)
 
+# PORTAL_URL = 'http://www.mysite.com'
 PORTAL_URL = 'http://localhost:8000'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'..','media')
+
+
+# email settings
+# please, set here you smtp server details and your admin email
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/data/work/buildouts/python/studentsdb/src/studentsdb/studentsdb/mylo' # change this to a proper location
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ADMIN_EMAIL = 's.miletskiy@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 's.miletskiy@gmail.com'
+EMAIL_HOST_PASSWORD = '********'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+# ADMIN_EMAIL = 's.miletskiy@gmail.com'
+# EMAIL_HOST = 'smtp.mandrillapp.com'
+# EMAIL_PORT = '587'
+# EMAIL_HOST_USER = 's.miletskiy@gmail.com'
+# EMAIL_HOST_PASSWORD = '9l_sUJ5YZLV7yu3SorEW0g'
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+LOG_FILE = os.path.join(BASE_DIR, 'studentsdb.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            # 'format': '%(process)d  %(levelname)s  %(asctime)s %(module)s: %(message)s',
+            'format': "[%(asctime)s] %(process)d %(levelname)s [%(name)s:%(filename)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d-%b-%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE,
+            'formatter': 'verbose'
+        },
+        'mail_admins': {
+            'level': 'INFO',
+            'class': 'django.utils.log.AdminEmailHandler',
+            # 'email_backend': 'django.core.mail.backends.filebased.EmailBackend',
+            'email_backend': 'django.core.mail.backends.console.EmailBackend',
+            'include_html': True,
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'students.signals': {
+            'handlers': ['console','file'],
+            'level': 'INFO',
+        },
+        'students.views.contact_admin': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+        },
+        'email_was_send': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        'students.request': {
+            'handlers': ['file','console'],
+            'level': 'INFO',
+            # 'propagate': False,
+        },
+        # 'django.request': {
+        #     'handlers': ['file','console'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # }
+    }
+}
+
+
+
+
 
 
