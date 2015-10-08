@@ -40,13 +40,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django.contrib.sites.models',
+    'django.contrib.sites.models',
     'crispy_forms',
     'students',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,9 +66,10 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                # 'django.template.context_processors.i18n',
+                'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
                 "students.context_processors.groups_processor",
                 "studentsdb.context_processors.students_proc",
@@ -100,11 +102,20 @@ USE_I18N = True
 
 LANGUAGE_CODE = 'uk'
 
-USE_L10N = True
-
 USE_TZ = True
 
-TIME_ZONE = 'Europe/Kiev'
+TIME_ZONE = 'UTC'
+# TIME_ZONE = 'Europe/Kiev'
+
+USE_L10N = True
+
+# LOCALE_PATHS = (
+#     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/uk',
+#     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/en',
+# )
+# LOCALE_PATHS = (
+#     os.path.join(BASE_DIR, 'locale'),
+# )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
