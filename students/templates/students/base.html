@@ -105,6 +105,10 @@
               <li role="presentation" {% ifequal request.path url4 %}class="active"{% endifequal %}>
                   <a class="glyphicon glyphicon-education" href={% url "exams" %}> <b>Icпити</b></a></li>
                   
+              {% url 'log' as url6 %}
+              <li role="presentation" {% ifequal request.path url6 %}class="active"{% endifequal %}>
+            <a class="glyphicon glyphicon-transfer" href={% url "log" %}> <b>Події</b></a></li>
+              
               {% url 'contact_admin' as url5 %}
               <li role="presentation" {% ifequal request.path url5 %}class="active"{% endifequal %}>
                   <a class="glyphicon glyphicon-envelope" href={% url "contact_admin" %}> <b>Контакт</b></a></li>

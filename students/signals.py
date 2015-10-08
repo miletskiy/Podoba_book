@@ -1,116 +1,139 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_delete, post_save, post_migrate
 from django.dispatch import Signal, receiver
 
 from .models.student import Student
 from .models.group import Group
 from .models.exam import Exam
 
-@receiver(post_save,sender=Student)
-def log_student_updated_added_event(sender,**kwargs):
-    # print sender
-    """writes info about newly added or updated student
-    into log file    """
-    logger = logging.getLogger(__name__)
-    # logger = logging.getLogger('students.signals')
-    # logger = logging.getLogger('django.request')
-
-    student = kwargs['instance']
-    if kwargs['created']:
-        logger.info("Student added: %s %s (ID: %d)",
-            student.first_name, student.last_name, student.id )
-    else:
-        logger.info("Student updated: %s %s (ID: %d)",
-            student.first_name, student.last_name, student.id)
-
-@receiver(post_delete,sender=Student)
-def log_student_deleted_event(sender,**kwargs):
-    # print sender
-    """writes info about newly deleted student
+@receiver(post_save)
+def log_instance_updated_added_event(sender,**kwargs):
+    """Writes info about newly added or updated instance
     into log file    """
     logger = logging.getLogger(__name__)
 
-    student = kwargs['instance']
-    logger.info("Student deleted: %s %s (ID: %d)",
-            student.first_name, student.last_name, student.id )
- 
- # Add events for groups
-@receiver(post_save,sender=Group)
-def log_group_updated_added_event(sender,**kwargs):
-    """writes info about newly added or updated Group
-    into log file    """
-    # logger = logging.getLogger(__name__)
-    logger = logging.getLogger('students.best')
+    # attribs = kwargs.items()
+    instance = kwargs['instance']
 
-    group = kwargs['instance']
-    if kwargs['created']:
-        logger.info("Group added: %s (ID: %d)",
-            group.title, group.id )
-    else:
-        logger.info("Group updated: %s %s (ID: %d)",
-            group.title, group.starosta, group.id )
+    if instance.__class__ is Student:
+        if kwargs['created']:
+            logger.info("Student added: %s %s (ID: %d)",
+                instance.first_name, instance.last_name, instance.id)
+        else:
+            logger.info("Student updated: %s %s (ID: %d)",#" %s",
+                instance.first_name, instance.last_name,instance.id)#,attribs)
 
-@receiver(post_delete,sender=Group)
-def log_group_deleted_event(sender,**kwargs):
-    """writes info about newly deleted Group
-    into log file    """
-    logger = logging.getLogger(__name__)
+    elif instance.__class__ is Group:
+        if kwargs['created']:
+            logger.info("Group added: %s (ID: %d)",
+                instance.title, instance.id)
+        else:
+            logger.info("Group updated: %s %s (ID: %d)",
+                instance.title, instance.starosta, instance.id)
 
-    group = kwargs['instance']
-    logger.info("Group deleted: %s (ID: %d)",
-        group.title, group.id )
+    elif instance.__class__ is Exam:
+        if kwargs['created']:
+            logger.info("Exam added: %s %s (ID: %d)",
+                instance.nazva, instance.exam_day, instance.id)
+        else:
+            logger.info("Exam updated: %s %s %s (ID: %d)",
+                instance.nazva, instance.exam_day, instance.prepod, instance.id)
 
-# Add events for Exams
-@receiver(post_save,sender=Exam)
-def log_exam_updated_added_event(sender,**kwargs):
-    """writes info about newly added or updated Exam
+
+@receiver(post_delete)
+def log_instance_deleted_event(sender,**kwargs):
+    """Writes info about newly deleted instance
     into log file    """
     logger = logging.getLogger(__name__)
 
-    Exam = kwargs['instance']
-    if kwargs['created']:
-        logger.info("Exam added: %s %s (ID: %d)",
-            Exam.nazva, Exam.exam_day, Exam.id )
-    else:
-        logger.info("Exam updated: %s %s %s (ID: %d)",
-            Exam.nazva, Exam.exam_day, Exam.prepod, Exam.id )
+    instance = kwargs['instance']
 
-@receiver(post_delete,sender=Exam)
-def log_exam_deleted_event(sender,**kwargs):
-    """writes info about newly deleted Exam
-    into log file    """
+    if instance.__class__ is Student:
+        logger.info("Student deleted: %s %s (ID: %d)",
+                instance.first_name, instance.last_name, instance.id)
+        
+    elif instance.__class__ is Group:
+        logger.info("Group deleted: %s (ID: %d)",
+            instance.title, instance.id)
+
+    elif instance.__class__ is Exam:
+        logger.info("Exam deleted: %s %s (ID: %d)",
+            instance.nazva, instance.prepod, instance.id)
+
+
+# Add counter for request 
+counter = 0
+
+from django.core.signals import request_started
+@receiver(request_started)
+def log_count_request(**kwargs):
+    """Counts every request  """
+    logger = logging.getLogger('students.request')
+    global counter
+    counter += 1
+    environ = kwargs['environ']
+    path_info = environ['PATH_INFO']
+    # referrer = environ['HTTP_REFERER'][21:]
+    logger.info("Jump from %s . Requests summary: %s", path_info, counter)
+
+
+# Custom signal handler for post_migrate
+from django.db.models.signals import post_migrate
+@receiver(post_migrate,dispatch_uid='Migrate for current database')
+def log_migrate_command_event(**kwargs):
+    """Writes info message every run post_migrate  """
     logger = logging.getLogger(__name__)
 
-    Exam = kwargs['instance']
-    logger.info("Exam deleted: %s %s (ID: %d)",
-        Exam.nazva, Exam.prepod, Exam.id )
+    base = kwargs['using']
+    logger.info("For migrate was using current database: %s", base)
 
 
 
-# Signal after sending mail to admin 526
-# Create signal.
-email_was_send = Signal(providing_args=['subject','email'])
-
-# These function is receiver. It will receive 
-# the signal (message) sent (published) by the sender (publisher).
-def simple_receiver(**kwargs):
-    subject, email = kwargs['subject'], kwargs['email']
-    print 'Receiver # 1'
-    print '\tsubject: %s, email: %s\n' % (subject, email)
-
-email_was_send.connect(simple_receiver)
-
-def send_signal_email_for_admin(subject,email):
-    email_was_send.send(sender='send_signal_email_for_admin', subject=subject, email=email)
-
-# send_signal_email_for_admin()
-# email_for_admin_was_send.send(sender, subject=subject, email=email)
-
-# from django.db.models.signals import pre_save
+from logging import Handler
+#
+# @receiver(post_save,sender=LogRecord)
+# def log_record(sender,**kwargs):
+#     logger = logging.getLogger(__name__)
+#     LogRecord=kwargs['instance']
+#     logger.info("Exam deleted: %s ", LogRecord)
 
 
+
+    
+#  # Add events for groups
+# @receiver(post_save,sender=Group)
+# def log_group_updated_added_event(sender,**kwargs):
+#     """writes info about newly added or updated Group
+#     into log file    """
+#     # logger = logging.getLogger(__name__)
+#     logger = logging.getLogger('students.best')
+
+#     group = kwargs['instance']
+
+# @receiver(post_delete,sender=Group)
+# def log_group_deleted_event(sender,**kwargs):
+#     """writes info about newly deleted Group
+#     into log file    """
+#     logger = logging.getLogger(__name__)
+
+#     group = kwargs['instance']
+
+# # Add events for Exams
+# @receiver(post_save,sender=Exam)
+# def log_exam_updated_added_event(sender,**kwargs):
+#     """writes info about newly added or updated Exam
+#     into log file    """
+#     logger = logging.getLogger(__name__)
+
+#     Exam = kwargs['instance']
+
+# @receiver(post_delete,sender=Exam)
+# def log_exam_deleted_event(sender,**kwargs):
+#     """writes info about newly deleted Exam
+#     into log file    """
+#     logger = logging.getLogger(__name__)
 
 
 

@@ -96,15 +96,15 @@ from .database.db import DATABASES
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 # LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'uk'
-TIME_ZONE = 'Europe/Kiev'
-
 USE_I18N = True
+
+LANGUAGE_CODE = 'uk'
 
 USE_L10N = True
 
 USE_TZ = True
 
+TIME_ZONE = 'Europe/Kiev'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -155,7 +155,9 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s: %(message)s'
+            # 'format': '%(process)d  %(levelname)s  %(asctime)s %(module)s: %(message)s',
+            'format': "[%(asctime)s] %(process)d %(levelname)s [%(name)s:%(filename)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d-%b-%Y %H:%M:%S"
         },
         'simple': {
             'format': '%(levelname)s: %(message)s'
@@ -193,7 +195,7 @@ LOGGING = {
             'level': 'INFO',
         },
         'students.signals': {
-            'handlers': ['mail_admins','file'],
+            'handlers': ['console','file'],
             'level': 'INFO',
         },
         'students.views.contact_admin': {
@@ -204,13 +206,13 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'INFO',
         },
-        'students.best': {
-            'handlers': ['mail_admins','file','console'],
+        'students.request': {
+            'handlers': ['file','console'],
             'level': 'INFO',
             # 'propagate': False,
         },
         # 'django.request': {
-        #     'handlers': ['file'],
+        #     'handlers': ['file','console'],
         #     'level': 'DEBUG',
         #     'propagate': True,
         # }

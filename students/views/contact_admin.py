@@ -97,12 +97,14 @@ def contact_admin(request):
                 messages.error(request,u"Під час відправки листа виникла непередбачувана помилка. \
                  Спробуйте скористатись даною формою пізніше. " )
                 logger = logging.getLogger(__name__)
-                logger.exception(message)
+                logger.exception('message')
             else:
                 send_signal_email_for_admin(subject,from_email)
+                # mail_logger=logging.getLogger(__name__)
                 mail_logger=logging.getLogger('email_was_send')
+                # mail_logger.log('error','custom message',from_email, subject)
+                # mail_logger.error("Email from %s was send with next subject: %s", from_email, subject)
                 mail_logger.info("Email from %s was send with next subject: %s", from_email, subject)
-                # message = u"Повідомлення успішно надіслане!"
                 # message = u"Повідомлення успішно надіслане!"
                 messages.success(request, u'messages Повідомлення успішно надіслане!! !')
 

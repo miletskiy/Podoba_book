@@ -35,6 +35,7 @@ from students.views.journal import JournalView
 
 from students.views.exams import ExamAddView,ExamEditView,ExamDeleteView
 
+
 urlpatterns = patterns('',
     # Students urls
     	# url(r'^students/add/$', 'students.views.students_edit',
@@ -134,6 +135,10 @@ urlpatterns = patterns('',
 # Domashka 352
     url(r'^kontakt/$', KontaktAdmin.as_view(),
         name='kontakt'),
+
+ # Domashka 526
+    url(r'^log/$', 'students.views.logentries.log_list',
+        name='log'),
 
 	#Default admin url
     url(r'^admin/', include(admin.site.urls)),
