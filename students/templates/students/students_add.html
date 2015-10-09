@@ -1,11 +1,11 @@
 {% extends "students/base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 
-{% block meta_title %}Додати студента{% endblock meta_title %}
+{% block meta_title %}{% trans "Add Student" %}{% endblock meta_title %}
 
-
-{% block title %}Додати студента{% endblock title %}
+{% block title %}{% trans "Add Student" %}{% endblock title %}
 
 <!--
 {% block subheader %}
@@ -21,8 +21,6 @@
         </div>
 {% endblock subheader %}
 -->
-
-
 
  {% block status_message %}
               {% if messages %}
@@ -43,7 +41,7 @@
       {% csrf_token %}
 
  <div class="form-group {% if errors.first_name %}has-error{% endif %}">
- <label for="first_name" class="col-sm-2 control-label">Ім'я*</label>
+ <label for="first_name" class="col-sm-2 control-label">{% trans "First Name" %}</label>
     <div class="col-sm-10">
        <input type="text" value="{{ request.POST.first_name }}"
                name="first_name" id="first_name"
@@ -53,7 +51,7 @@
     </div>  
   </div>
   <div class="form-group {% if errors.last_name %}has-error{% endif %}">
-     <label for="last_name" class="col-sm-2 control-label">Прізвище*</label>
+     <label for="last_name" class="col-sm-2 control-label">{% trans "Last Name" %}</label>
     <div class="col-sm-10">
      <input type="text" value="{{ request.POST.last_name }}"
             name="last_name" id="last_name"
@@ -64,7 +62,7 @@
    </div>
    
    <div class="form-group {% if errors.middle_name %}has-error{% endif %}">
-    <label for="middle_name" class="col-sm-2 control-label">По-батькові</label>
+    <label for="middle_name" class="col-sm-2 control-label">{% trans "Middle Name" %}</label>
   <div class="col-sm-10">
     <input type="text" value="{{ request.POST.middle_name }}"
            name="middle_name" id="middle_name"
@@ -76,7 +74,7 @@
   
     
     <div class="form-group {% if errors.birthday %}has-error{% endif %}">
-         <label for="id_birthday" class="col-sm-2 control-label">Дата Народження*</label>
+         <label for="id_birthday" class="col-sm-2 control-label">{% trans "Birthday" %}</label>
          <!-- Need refactoring width styles  -->
          <div class="input-group date  col-sm-5">
          <!-- Need refactoring width styles  -->
@@ -101,7 +99,7 @@
 
 
   <div class="form-group {% if errors.photo %}has-error{% endif %}">
-    <label for="photo" class="col-sm-2 control-label">Фото</label>
+    <label for="photo" class="col-sm-2 control-label">{% trans "Photo" %}</label>
     <div class="col-sm-10">
     <input type="file" value="" name="photo" id="photo" class="form-control" />
       <span class="help-block">{{ errors.photo }}</span>    
@@ -109,7 +107,7 @@
   </div>
   
    <div class="form-group {% if errors.ticket %}has-error{% endif %}">
-     <label for="ticket" class="col-sm-2 control-label">Білет*</label>
+     <label for="ticket" class="col-sm-2 control-label">{% trans "Ticket #" %}</label>
    <div class="col-sm-10">
            <input type="text" value="{{ request.POST.ticket }}"
                    name="ticket" id="ticket"
@@ -120,11 +118,11 @@
    </div>
 <!--   <div>-->
 <div class="form-group {% if errors.student_group %}has-error{% endif %}">
-    <label for="student_group" class="col-sm-2 control-label">Група*</label>
+    <label for="student_group" class="col-sm-2 control-label">{% trans "Group" %}</label>
     <div class="col-sm-10">
      <select name="student_group" id="student_group"
              class="form-control">
-      <option value="">Виберіть групу</option>
+      <option value="">{% trans "Choose Group" %}</option>
       {% for group in groups %}
       <option value="{{ group.id }}" {% if group.id == request.POST.student_group|add:0 %}selected="1"{% endif %}>{{group.title}}</option>
 <!--      <option value="2">МтМ-2</option>-->
@@ -135,7 +133,7 @@
    </div>
   
  <div class="form-group {% if errors.notes %}has-error{% endif %}">
-    <label for="notes" class="col-sm-2 control-label">Додаткові Нотатки</label>
+    <label for="notes" class="col-sm-2 control-label">{% trans "Notes" %}</label>
      <div class="col-sm-10">
      <textarea name="notes" id="notes" class="form-control"
      placeholder="Введіть нотатку"
@@ -148,10 +146,10 @@
   <div class="form-group">   
       <label class="col-sm-2 control-label"></label>
       <div class="col-sm-10">
-      <input type="submit" value="Додати" name="add_button"
+      <input type="submit" value="{% trans "Add" %}" name="add_button"
                class="btn btn-primary" />
       <button type="submit" name="cancel_button" 
-                class="btn btn-link">Скасувати</button>
+                class="btn btn-link">{% trans "Cancel" %}</button>
     </div>
   </div>
  </form>

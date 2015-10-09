@@ -78,6 +78,7 @@ class JournalView(TemplateView):
         else:
             # otherwise show all students
             queryset = Student.objects.all().order_by('last_name')
+            # queryset = []
 
             
 

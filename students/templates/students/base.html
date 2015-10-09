@@ -1,11 +1,12 @@
+{% load i18n %}
 {% load static from staticfiles %}
 
 <!DOCTYPE html>
 <html lang="uk"> 
   <head>
     <meta charset="UTF-8"/>
-    <title>Сервіс Обліку Студентів - {% block meta_title %}{% endblock meta_title %}</title> 
-    <meta name="description" value="Система Обліку Студентів Навчального Закладу" />
+    <title>{% trans "Students Accounting Service" %} - {% block meta_title %}{% endblock meta_title %}</title> 
+    <meta name="description" value="{% trans "App to manage students database" %}" />
     <!-- Dodaly styes -->
 
   <link rel="stylesheet"
@@ -43,7 +44,8 @@
           <!-- Logo -->
         
           <div class="col-xs-8"> 
-            <h1>{% block logo %}Сервіс Обліку Студентів{% endblock logo %}</h1>
+<!--  {#          <h1>{% block logo %}Сервіс Обліку Студентів{% endblock logo %}</h1> #}-->
+            <h1>{% trans "Students Accounting Service" %}</h1>
           </div>
 <!--          <div id='loader'><img src="static/img/me.jpeg"/></div>-->
          
@@ -53,9 +55,9 @@
             <!-- С􏰃електор􏰌􏰃􏰇􏰂􏰀􏰍 Г􏰍􏰈􏰄руп -->
           {% block selector %}
           <div class="col-xs-4" id="group-selector"> 
-            <strong>Група:</strong>
+            <strong>{% trans "Group:" %}</strong>
               <select>
-                <option value="">Усі Студенти</option>
+                <option value="">{% trans "All Students" %}</option>
                 {% for group in GROUPS %}
                   <option value=" {{ group.id }} " {% if group.selected %}selected="1"{% endif %}>
                         {{ group.title }} {% if group.starosta %}, {{ group.starosta }}{% endif %}
@@ -87,31 +89,31 @@
               {% if request.path == url1 %}
                 class="active"
               {% endif %}>
-                  <a class="glyphicon glyphicon-user" aria-hidden="true" href={% url "home" %}> <b>Студенти</b></a></li>
+                  <a class="glyphicon glyphicon-user" aria-hidden="true" href={% url "home" %}> <b>{% trans "Students" %}</b></a></li>
 <!--                  <a href="{% url "home" %}?order_by=last_name">Студенти</a></li>-->
 <!--                  <a href="{% url "home" %}?order_by=last_name{% if order_by == 'last_name' and reverse != '1' %}&amp;reverse=1{% endif %}">Студенти</a></li>                  -->
               {% url 'journal' as url2 %}
               <li role="presentation" {% if url2 in request.path %}class="active"{% endif %}>
 <!--              <li role="presentation" {% ifequal request.path url2 %}class="active"{% endifequal %}>-->
                   <a class="glyphicon glyphicon-calendar" href={% url "journal" %}>
-                    <b>Відвідування</b>
+                    <b>{% trans "Journal" %}</b>
                   </a>
               </li>
               {% url 'groups' as url3 %}
               <li role="presentation" {% ifequal request.path url3 %}class="active"{% endifequal %}>
-                  <a class="glyphicon glyphicon-list" href={% url "groups" %}><b> Групи</b> </a></li>
+                  <a class="glyphicon glyphicon-list" href={% url "groups" %}><b> {% trans "Groups" %}</b> </a></li>
               
                {% url 'exams' as url4 %}
               <li role="presentation" {% ifequal request.path url4 %}class="active"{% endifequal %}>
-                  <a class="glyphicon glyphicon-education" href={% url "exams" %}> <b>Icпити</b></a></li>
+                  <a class="glyphicon glyphicon-education" href={% url "exams" %}> <b>{% trans "Exams" %}</b></a></li>
                   
               {% url 'log' as url6 %}
               <li role="presentation" {% ifequal request.path url6 %}class="active"{% endifequal %}>
-            <a class="glyphicon glyphicon-transfer" href={% url "log" %}> <b>Події</b></a></li>
+            <a class="glyphicon glyphicon-transfer" href={% url "log" %}> <b>{% trans "Events" %}</b></a></li>
               
               {% url 'contact_admin' as url5 %}
               <li role="presentation" {% ifequal request.path url5 %}class="active"{% endifequal %}>
-                  <a class="glyphicon glyphicon-envelope" href={% url "contact_admin" %}> <b>Контакт</b></a></li>
+                  <a class="glyphicon glyphicon-envelope" href={% url "contact_admin" %}> <b>{% trans "Contact" %}</b></a></li>
               
             </ul>
           </div>
@@ -146,7 +148,7 @@
            {% block footer %}
           <div class="row" id="footer"> 
             <div class="col-xs-9">
-              &copy;  Сервіс обліку cтудентів - {% now "Y"%}
+              &copy;  {% trans "Students Accounting Service" %} - {% now "Y"%}
             </div>
              
               <div class="col-xs-3">

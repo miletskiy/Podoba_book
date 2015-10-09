@@ -1,19 +1,20 @@
 {% extends "students/base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 {% load crispy_forms_tags %}
 
 {% block meta_title %}
 {% url 'students_add' as url1 %}
-{% if request.path == url1 %} Додати студента
-{% else %}                    Редагувати студента
+{% if request.path == url1 %} {% trans "Add Student" %}
+{% else %}                    {% trans "Edit Student" %}
 {% endif %}
 {% endblock meta_title %}
 
 {% block title %}
 {% url 'students_add' as url1 %}
-{% if request.path == url1 %} Додати студента
-{% else %} Редагувати студента
+{% if request.path == url1 %} {% trans "Add Student" %}
+{% else %} {% trans "Edit Student" %}
 {% endif %}
 {% endblock title %}
 
@@ -21,7 +22,7 @@
  {% block status_message %}
 {% if form.errors %}
 <div class="alert alert-danger" role="alert">
- Будь-ласка, виправте наступні помилки
+ {% trans "Please, fix the following errors: " %}
  </div>
   {% endif %}
 {% if messages %}

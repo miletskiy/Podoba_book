@@ -56,6 +56,7 @@ urlpatterns = patterns('',
          name='students_edit'),
 
 # Domashka 357
+
 #     url(r'^students/(?P<pk>\d+)/edit1/$',
 #          'students.views.student_edit.student_edit' ,
 #          name='students_edit1'),
@@ -64,13 +65,14 @@ urlpatterns = patterns('',
     # url(r'^students/(?P<sid>\d+)/delete/$',
     #      'students.views.students.students_delete',
     #      name='students_delete'),
-    # url(r'^students/(?P<pk>\d+)/delete/$',
-    #      StudentDeleteView.as_view(),
-    #      name='students_delete'),
-
-	url(r'^students/(?P<pk>\d+)/delete/$',
-         'students.views.students.students_delete_my',
+    url(r'^students/(?P<pk>\d+)/delete/$',
+         StudentDeleteView.as_view(),
          name='students_delete'),
+
+# Domashka del students by hands
+	# url(r'^students/(?P<pk>\d+)/delete/$',
+     #     'students.views.students.students_delete_my',
+     #     name='students_delete'),
 
     # Groups Listing urls
 	url(r'^groups/$', 'students.views.groups.groups_list', name='groups'),

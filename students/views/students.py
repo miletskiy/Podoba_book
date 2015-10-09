@@ -37,6 +37,7 @@ def students_list(request):
     else:
         # otherwise show all students
         students = Student.objects.all().order_by('last_name')
+        # students = []
 
 
     # try to order students list

@@ -1,40 +1,44 @@
 {% extends "students/base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 
-{% block meta_title %}Облiк вiдвiдування{% endblock meta_title %}
+{% block meta_title %}{% trans "Monthly Journal" %}{% endblock meta_title %}
 
-{% block title %}Облiк вiдвiдування{% endblock title %}
+{% block title %}{% trans "Monthly Journal" %}{% endblock title %}
 
 {% block content %}
 {# Скоро тут будет Облiк вiдвiдування #}
 {% if not students %}
 
 <div class="alert alert-warning col-xs-12">
-    Поки немає жодного студента в базі. Будь-ласка,
-    <a href="{% url "students_add" %}"><b>додайте</b></a> першого.
+{% url "students_add" as students_add %}
+{% blocktrans %}
+There are no students in the database yet.
+Please, <a href="{{ students_add }}"><b>add</b></a> first student.
+{% endblocktrans %}  
 </div>
 
 {% else %}
 
 <div class="alert alert-info col-xs-12">
-    Зміни в журнал зберігаються автоматично при кожному кліку в клітинці
-    таблиці.
-    <span id="ajax-progress-indicator"><b>Йде збереження...</b></span>
+{% trans "Changes to the log are automatically saved every time you click in the cell table." %}
+    <span id="ajax-progress-indicator"><b>{% trans "Saving..." %}</b></span>
 </div>
 
 <div class="alert alert-danger col-xs-12 glyphicon glyphicon-exclamation-sign" aria-hidden="true" id="ajax-progress-warmes" >
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-    <b>Виникла помилка......</b>
+    <b>{% trans "An error occurred..." %}</b>
 </div>
 
 <p id="journal-nav" class="text-center col-xs-12">
   <a href="?month={{ prev_month }}"
-     title="Попередній Місяць">&larr;</a>
-  <!-- TODO: translate month name -->
+     title="{% trans "Previous Month" %}">&larr;</a>
+
   <strong>{{ month_verbose }} {{ year }}</strong>
   <a href="?month={{ next_month }}"
-     title="Наступний Місяць">&rarr;</a>
+     title="{% trans "Next Month" %}">&rarr;</a>
+     {# title="Наступний Місяць">&rarr;</a> #}
 </p>
 
 <table class="table table-hover table-striped table-bordered"
@@ -43,11 +47,11 @@
   <thead>
     <tr>
       <th class="day-header">#</th>
-      <th class="day-header">Студент</th>
+      <th class="day-header">{% trans "Student" %}</th>
       {% for day in month_header %}
       <th class="day-header">
         <!-- TODO: translate day name -->
-        {{ day.verbose }}
+        {% trans day.verbose %}
         <br />
         {{ day.day }}
       </th>
@@ -73,7 +77,7 @@
       </td>
 
       <td>
-        <a title="Редагувати" target="_blank"
+        <a title="{% trans "Edit" %}" target="_blank"
            href="{% url "students_edit" student.id %}">
           {{ student.fullname }}
         </a>
