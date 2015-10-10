@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import logging
 
 from django.shortcuts import render
@@ -19,7 +19,7 @@ from django.dispatch import Signal
 # from students.signals import send_signal_email_for_admin
 # from contact_form.forms import ContactForm
 
-# class KontaktForm(contact_form.forms.ContactForm):
+from django.utils.translation import ugettext as _
 
 
 
@@ -44,17 +44,17 @@ class ContactForm(forms.Form):
         self.helper.field_class = 'col-sm-10'
 
         # form buttons
-        self.helper.add_input(Submit('send_button', u'Надіслати'))
+        self.helper.add_input(Submit('send_button', _(u'Send')))
 
     from_email = forms.EmailField(
-        label=u"Ваша емейл адреса")
+        label= _(u'Your email'))
 
     subject = forms.CharField(
-        label=u"Заголовок листа",
+        label=_(u'Subject'),
         max_length=128)
 
     message = forms.CharField(
-        label=u"Текст повідомлення",
+        label=_(u'Message for admin'),
         max_length=2560,
         widget=forms.Textarea)
 
@@ -92,10 +92,8 @@ def contact_admin(request):
             try:
                 send_mail(subject, message, from_email, [ADMIN_EMAIL])
             except Exception:
-                # message = u"Під час відправки листа виникла непередбачувана помилка. \
-                # Спробуйте скористатись даною формою пізніше. "
-                messages.error(request,u"Під час відправки листа виникла непередбачувана помилка. \
-                 Спробуйте скористатись даною формою пізніше. " )
+                messages.error(request,_(u"When sending a letter, an unexpected error occurred.\
+                 Try to use this form later.") )
                 logger = logging.getLogger(__name__)
                 logger.exception('message')
             else:
@@ -105,8 +103,7 @@ def contact_admin(request):
                 # mail_logger.log('error','custom message',from_email, subject)
                 # mail_logger.error("Email from %s was send with next subject: %s", from_email, subject)
                 mail_logger.info("Email from %s was send with next subject: %s", from_email, subject)
-                # message = u"Повідомлення успішно надіслане!"
-                messages.success(request, u'messages Повідомлення успішно надіслане!! !')
+                messages.success(request, _(u'The message was successfully sent'))
 
             # redirect to same contact page with success message
             # return HttpResponseRedirect(
@@ -119,16 +116,6 @@ def contact_admin(request):
 
 
     return render(request, 'contact_admin/form.html', {'form': form})
-
-
-
-
-
-
-
-
-
-
 
 
 

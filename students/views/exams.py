@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from django.shortcuts import render
 # from django.http import HttpResponse ,HttpRequest
@@ -17,6 +16,7 @@ from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
 
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.utils.translation import ugettext as _
 
 from django.contrib import messages
 from django.contrib.messages import get_messages
@@ -96,8 +96,8 @@ class ExamAddForm(ModelForm):
 
         # buttons
         self.helper.layout.fields.append(FormActions(
-            Submit('add_button', u'Додати', css_class="btn btn-primary"),
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+            Submit('add_button', _(u'Save'), css_class="btn btn-primary"),
+            Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"),
         ))
 
 # Edit exams form
@@ -126,8 +126,8 @@ class ExamEditForm(ModelForm):
 
         # buttons
         self.helper.layout.fields.append(FormActions(
-            Submit('edit_button', u'Зберегти', css_class="btn btn-primary"),
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+            Submit('edit_button', _(u'Save'), css_class="btn btn-primary"),
+            Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"),
         ))
         
 # Base view for Exams
@@ -147,7 +147,7 @@ class ExamAddView(BaseExamFormView, CreateView):
     def post(self, request, *args, **kwargs):
 
         if request.POST.get('cancel_button'):
-            messages.error(request, u'Додавання іспиту messages відмінено! !' )
+            messages.error(request, _(u"Add exam cancelled.") )
             return HttpResponseRedirect(reverse('exams'))
         else:
             nazva = request.POST['nazva']
@@ -155,7 +155,7 @@ class ExamAddView(BaseExamFormView, CreateView):
             storage = get_messages(request) #removing all messages thanks Ivan Savchenko. Do not work ((
             for message in storage:
                 pass
-            messages.success(request, u'Iспит %s для %s успішно messages додано' % (nazva,group) )
+            messages.success(request, _(u"Exam %(exm)s for %(grp)s was successfully added ") % {'grp':group,'exm':nazva})
 
             return super(ExamAddView, self).post(request, *args, **kwargs)
 
@@ -174,7 +174,7 @@ class ExamEditView(BaseExamFormView, UpdateView):
             storage = get_messages(request) #removing all messages thanks Ivan Savchenko
             for message in storage:
                 pass
-            messages.error(request, u'Редагування іспиту %s відмінено' % exam.nazva )
+            messages.error(request, _(u"Edit exam %(exm)s cancelled.") % {'exm': exam.nazva})
             return HttpResponseRedirect(reverse('exams'))
         else:
             nazva = request.POST['nazva']
@@ -185,7 +185,7 @@ class ExamEditView(BaseExamFormView, UpdateView):
                 pass
             # wsx = pk.decode('utf-8')
             # qw=Group.objects.filter(pk=wsx)
-            messages.success(request, u'Iспит %s успішно змінено.' % nazva )
+            messages.success(request, _(u"Exam %(nzv)s successfully updated.") % {'nzv': nazva})
 
             return super(ExamEditView, self).post(request, *args, **kwargs)
 
@@ -197,10 +197,9 @@ class ExamDeleteView(BaseExamFormView, DeleteView):
 
     def post(self, request, *args, **kwargs):
         exam = self.get_object()
-        messages.success(request, u'Iспит %s успішно messages видалено!! messages!'% exam )
+        messages.success(request, _(u"Exam %(exm)s successfully deleted.") % {'exm': exam})
 
         return super(ExamDeleteView,self).post(request,*args,**kwargs)
-
 
 
 
@@ -211,36 +210,3 @@ def exams_delete(request,eid):
     return HttpResponse('<h1>Delete Exam %s</h1>' % eid)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # exams = (
-    #     {'id':1,
-    #     'nazva':u'Основи Python',
-    #     'datetime':u'2015-09-12 10:00',
-    #     'prepod':u'Гвидо ван Россум',
-    #     'group':u'КПИ 1й курс'
-    #     },
-    #     {'id':2,
-    #     'nazva':u'Основи Django',
-    #     'datetime':u'2015-09-16 10:42',
-    #     'prepod':u'Адриан Головатый',
-    #     'group':u'КНАУ 1й курс'},
-    #     {'id':3,
-    #     'nazva':u'Основи SQL',
-    #     'datetime':u'2015-09-20 10:42',
-    #     'prepod':u'Николай Иванович',
-    #     'group':u'Институт информатики 1й курс'},
-    # )

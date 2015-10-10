@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect # HttpRequest ,
@@ -23,6 +22,8 @@ from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
 
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.utils.translation import ugettext as _
+
 
 # Views for Groups
 def groups_list(request):
@@ -55,19 +56,8 @@ def groups_list(request):
     #     # last page of results.
     #     groups = paginator.page(paginator.num_pages)
 
-    # groups_kolvo = paginator.page(paginator.count) не получилось((
+    # groups_kolvo = paginator.page(paginator.count) next day
 
-#     groups = (
-#         {'id':1,
-#         'nazva':u'Мтм-21',
-#         'starosta':u'Ячменев Олег'},
-#         {'id':2,
-#         'nazva':u'Мтм-22',
-#         'starosta':u'Виталий Подоба'},
-#         {'id':3,
-#         'nazva':u'Мтм-23',
-#         'starosta':u'Иванов Андрей'},
-#     )
     context = paginate(groups, 4, request, {},
         var_name='groups')
 
@@ -90,7 +80,7 @@ def groups_add(request):
 
             title = request.POST.get('title')
             if not title:
-                errors['title']= u" Назва групи є обов'язковою"
+                errors['title']= _(u"Group title field is required")
             else:
                 data['title'] = title
 
@@ -111,20 +101,20 @@ def groups_add(request):
                     notes = request.POST['notes'] 
                     )
                     group.save()
-                messages.success(request, u'Групу %s успішно messages.success!додано  ' % Group.objects.last())
+                messages.success(request, _(u"The group %s was successfully added.") % Group.objects.last())
     #           return group list
                 return HttpResponseRedirect(reverse('groups'))
     #         if data incorrect:
     #                   return template with errors
             else:
-                messages.error(request, u'Будь-ласка, messages.error виправте наступні помилки: ')
+                messages.error(request, _(u"Please, fix the following errors: "))
                 return render(request,'students/groups_add.html',
                     {'students':Student.objects.all().order_by('last_name'),
                     'errors':errors})
     #       if cancel_button press:
         elif request.POST.get('cancel_button') is not None:
     #                   return group list
-            messages.error(request, u'Додавання групи скасовано! messages!')
+            messages.error(request, _(u"Add group cancelled."))
             return HttpResponseRedirect(reverse('groups'))
 
     # elif form was not post:
@@ -159,8 +149,8 @@ class GroupAddForm(ModelForm):
 
         # buttons
         self.helper.layout.fields.append(FormActions(
-            Submit('add_button', u'Додати', css_class="btn btn-primary"),
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+            Submit('add_button', _(u'Save'), css_class="btn btn-primary"),
+            Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"),
         ))
 
 # Group edit form for generic views
@@ -188,8 +178,8 @@ class GroupEditForm(ModelForm):
 
         # buttons
         self.helper.layout.fields.append(FormActions(
-            Submit('edit_button', u'Зберегти', css_class="btn btn-primary"),
-            Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+            Submit('edit_button', _(u'Save'), css_class="btn btn-primary"),
+            Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"),
         ))    
 
 # Base view for Group
@@ -209,14 +199,14 @@ class GroupAddView(BaseGroupFormView, CreateView):
     def post(self, request, *args, **kwargs):
 
         if request.POST.get('cancel_button'):
-            messages.error(request, u'Додавання групи messages відмінено! !' )
+            messages.error(request, _(u"Add group cancelled.") )
             return HttpResponseRedirect(reverse('groups'))
         else:
             group = request.POST['title']
             storage = get_messages(request) #removing all messages thanks Ivan Savchenko. Do not work ((
             for message in storage:
                 pass
-            messages.success(request, u'Групу %s  успішно messages додано' % group )
+            messages.success(request, _(u"The group %(grp)s  was successfully added ") % {'grp':group} )
 
             return super(GroupAddView, self).post(request, *args, **kwargs)
 
@@ -229,13 +219,13 @@ class GroupEditView(BaseGroupFormView, UpdateView):
     form_class = GroupEditForm
  
     def post(self, request, *args, **kwargs):
-        exam = self.get_object()
+        group = self.get_object()
 
         if request.POST.get('cancel_button'):
             storage = get_messages(request) #removing all messages thanks Ivan Savchenko
             for message in storage:
                 pass
-            messages.error(request, u'Редагування групи %s відмінено' % exam.title )
+            messages.error(request, _(u"Edit group %(grp)s cancelled.") % {'grp': group.title} )
             return HttpResponseRedirect(reverse('groups'))
         else:
             title = request.POST['title']
@@ -246,7 +236,7 @@ class GroupEditView(BaseGroupFormView, UpdateView):
                 pass
             # wsx = pk.decode('utf-8')
             # qw=Group.objects.filter(pk=wsx)
-            messages.success(request, u'Групу %s успішно змінено.' % title )
+            messages.success(request, _(u"Group %(ttl)s successfully updated.") % {'ttl': title} )
 
             return super(GroupEditView, self).post(request, *args, **kwargs)
 
@@ -266,7 +256,7 @@ class GroupDeleteView(BaseGroupFormView,DeleteView):
 
     def post(self, request, *args, **kwargs):
         group = self.get_object()
-        messages.success(request, u'Групу %s успішно messages видалено!! messages!'% group )
+        messages.success(request, _(u"Group %(grp)s successfully deleted.")% {'grp': group})
 
         return super(GroupDeleteView,self).post(request,*args,**kwargs)
 
@@ -283,7 +273,6 @@ class GroupDelete(object):
 #     # grup = self.get_object()
 #     group = Group.objects.all().filter(pk = request.POST.get('pk'))
 #     group.delete()
-#     messages.success(request, u'Групу  успішно messages видалено!! !')#%s % grup)
 #
 #     return HttpResponseRedirect(reverse('home'),messages)
 #     # return HttpResponse('<h1>Delete Group %s</h1>' % gid)
@@ -297,11 +286,11 @@ def groups_delete_my(request, pk):
     if request.method == 'POST':
         if request.POST.get('delete_button') is not None:
             group.delete()
-            messages.success(request, u'Групу %s успішно messages видалено!! !' % title)
+            messages.success(request, _(u"Group %(ttl)s successfully deleted.")% {'ttl': title})
             return HttpResponseRedirect(reverse('groups'),messages)
 
         elif request.POST.get('cancel_button') is not None:
-            messages.error(request, u'Видалення групи %s скасовано messages!' % title)
+            messages.error(request, _(u"Delete Group %(ttl)s cancelled.")% {'ttl': title})
             return HttpResponseRedirect(reverse('groups'),messages)
 
     else:
@@ -315,4 +304,4 @@ def groups_delete_my(request, pk):
     # pq = HttpRequest.path
     # zaq = str(pq)
     # # pq = RequestContext(request, {})
-    # return HttpResponse(zaq)пока ничего не получилось.
+    # return HttpResponse(zaq) next day
