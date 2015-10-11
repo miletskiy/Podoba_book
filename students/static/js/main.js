@@ -61,6 +61,7 @@ function initGroupSelector() {
     return true;
   });
 }
+
 function initDateFields() { 
     $('input.dateinput').datetimepicker({
       'format': 'YYYY-MM-DD',
@@ -416,6 +417,30 @@ function initEditExamForm(form, modal) {
 }
 
 
+// ----------------------------____________________--------------------------
+
+function initLangSelector() {
+  // look up select element with langs and attach our even handler
+  // on field "change" event
+  $('#languge-selector select').change(function(event){
+    // get value of currently selected languge option
+    var lang = $(this).val();
+
+    if (lang) {
+      // set cookie with expiration date 1 year since now;
+      // cookie creation function takes period in days
+        $.cookie('current_lang', lang, {'path': '/', 'expires': 365});
+    } else {
+    //   // otherwise we delete the cookie
+      $.removeCookie('current_lang', {'path': '/'});
+    }
+
+    // and reload a page
+    location.reload(true);
+
+    return true;
+  });
+}
 
 
 
@@ -428,6 +453,7 @@ $(document).ready(function () {
   initEditGroupPage();
   // updatePageContext();
   initEditExamPage();
+  initLangSelector();
 });
 
     // Setup the ajax indicator

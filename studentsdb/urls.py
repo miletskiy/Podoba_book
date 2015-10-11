@@ -44,6 +44,9 @@ urlpatterns = patterns('',
     # Javascript translation
     url(r'^jsi18n\.js$', 'django.views.i18n.javascript_catalog',js_info_dict),
 
+    # i18n
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+
     # Students urls
         # url(r'^students/add/$', 'students.views.students_edit',
     url(r'^$', 'students.views.students.students_list', name='home'),

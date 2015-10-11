@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-10 12:05+0000\n"
+"POT-Creation-Date: 2015-10-11 10:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgstr "База студентів"
 msgid "Exam"
 msgstr "Іспит"
 
-#: models/exam.py:10 templates/students/base.html:108
+#: models/exam.py:10 templates/students/base.html:122
 #: templates/students/exams_list.html:6 templates/students/exams_list.html:8
 msgid "Exams"
 msgstr "Іспити"
@@ -46,7 +46,7 @@ msgstr "Викладач"
 
 #: models/exam.py:29
 msgid "Exam Group"
-msgstr "Групу iспиту"
+msgstr "Група iспиту"
 
 #: models/exam.py:37 models/group.py:27 models/student.py:47
 #: templates/students/students_add.html:136
@@ -59,7 +59,7 @@ msgstr "Додаткові Нотатки"
 msgid "Group"
 msgstr "Група"
 
-#: models/group.py:11 templates/students/base.html:104
+#: models/group.py:11 templates/students/base.html:118
 #: templates/students/groups_list.html:6 templates/students/groups_list.html:8
 msgid "Groups"
 msgstr "Групи"
@@ -103,7 +103,7 @@ msgstr "Повідомлення"
 #: models/monthjournal.py:10 templates/students/journal.html:6
 #: templates/students/journal.html.py:8
 msgid "Monthly Journal"
-msgstr "Облiк Відвідування"
+msgstr "Щомiсячний Журнал"
 
 #: models/monthjournal.py:11
 msgid "Monthly Journals"
@@ -118,7 +118,7 @@ msgstr "Студент"
 msgid "Date"
 msgstr "Дата"
 
-#: models/student.py:10 templates/students/base.html:92
+#: models/student.py:10 templates/students/base.html:113
 #: templates/students/students_list.html:6
 msgid "Students"
 msgstr "Студенти"
@@ -164,7 +164,7 @@ msgid "Please, fix the following errors: "
 msgstr "Будь-ласка, виправте наступні помилки:"
 
 #: templates/students/base.html:8 templates/students/base.html.py:48
-#: templates/students/base.html:151
+#: templates/students/base.html:173
 msgid "Students Accounting Service"
 msgstr "Сервіс Обліку Студентів"
 
@@ -172,24 +172,28 @@ msgstr "Сервіс Обліку Студентів"
 msgid "App to manage students database"
 msgstr "Система Обліку Студентів Навчального Закладу"
 
-#: templates/students/base.html:58
+#: templates/students/base.html:61
+msgid "Language:"
+msgstr "Мова:"
+
+#: templates/students/base.html:79
 msgid "Group:"
 msgstr "Група:"
 
-#: templates/students/base.html:60
+#: templates/students/base.html:81
 msgid "All Students"
 msgstr "Усі Студенти"
 
-#: templates/students/base.html:99 templates/students/groups_list.html:80
+#: templates/students/base.html:128 templates/students/groups_list.html:80
 #: templates/students/students_list.html:124
 msgid "Journal"
 msgstr "Відвідування"
 
-#: templates/students/base.html:112
+#: templates/students/base.html:134
 msgid "Events"
 msgstr "Події"
 
-#: templates/students/base.html:116
+#: templates/students/base.html:138
 msgid "Contact"
 msgstr "Контакт"
 
@@ -381,8 +385,9 @@ msgstr "Текст повідомлення"
 msgid ""
 "When sending a letter, an unexpected error occurred.                 Try to "
 "use this form later."
-msgstr "Під час відправки листа виникла непередбачувана помилка. \
-                Спробуйте скористатись даною формою пізніше. "
+msgstr ""
+"Під час відправки листа виникла непередбачувана помилка.                 "
+"Спробуйте скористатись даною формою пізніше. "
 
 #: views/contact_admin.py:106
 msgid "The message was successfully sent"
@@ -398,18 +403,22 @@ msgid "Add exam cancelled."
 msgstr "Додавання іспиту скасовано."
 
 #: views/exams.py:158
+#, python-format
 msgid "Exam %(exm)s for %(grp)s was successfully added "
 msgstr "Icпит %(exm)s для %(grp)s успішно додано."
 
 #: views/exams.py:177
+#, python-format
 msgid "Edit exam %(exm)s cancelled."
 msgstr "Редагування іспиту %(exm)s скасовано."
 
 #: views/exams.py:188
+#, python-format
 msgid "Exam %(nzv)s successfully updated."
 msgstr "Icпит %(nzv)s успішно оновлений."
 
 #: views/exams.py:200
+#, python-format
 msgid "Exam %(exm)s successfully deleted."
 msgstr "Icпит %(exm)s успішно видалено."
 
@@ -454,7 +463,7 @@ msgstr "Групу %(ttl)s успішно видалено."
 #: views/groups.py:293
 #, python-format
 msgid "Delete Group %(ttl)s cancelled."
-msgstr "Редагування групи %(ttl)s скасовано."
+msgstr "Видалення групи %(ttl)s скасовано."
 
 #: views/students.py:89
 msgid "First Name field is required"

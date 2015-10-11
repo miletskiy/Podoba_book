@@ -48,6 +48,7 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    # 'students.util.LocalChooseLang',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
                 "students.context_processors.groups_processor",
+                "students.context_processors.lang_processor",
                 "studentsdb.context_processors.students_proc",
             ],
         },
@@ -109,13 +111,20 @@ TIME_ZONE = 'UTC'
 
 USE_L10N = True
 
+LANGUAGES = (
+	('pl', 'Polski'),
+	('en', 'English'),
+	('uk', 'Ukrainian'),
+)
+
+
 # LOCALE_PATHS = (
 #     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/uk',
 #     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/en',
 # )
-# LOCALE_PATHS = (
-#     os.path.join(BASE_DIR, 'locale'),
-# )
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'students/locale'),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
