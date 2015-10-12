@@ -18,10 +18,8 @@ from django.contrib import messages
 from django.dispatch import Signal
 # from students.signals import send_signal_email_for_admin
 # from contact_form.forms import ContactForm
-
+from django.contrib.auth.decorators import permission_required
 from django.utils.translation import ugettext as _
-
-
 
 class ContactForm(forms.Form):
 
@@ -76,7 +74,7 @@ def send_signal_email_for_admin(subject,email):
     email_was_send.send(sender='send_signal_email_for_admin', subject=subject, email=email)
 
 
-
+@permission_required('auth.add_user')
 def contact_admin(request):
     # check if form was posted
     if request.method == 'POST':

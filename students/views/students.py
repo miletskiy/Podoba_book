@@ -11,6 +11,7 @@ from ..models.group import Group
 
 from datetime import datetime
 
+from django.views.generic.base import View
 from django.views.generic import UpdateView, DeleteView, CreateView
 
 from django.forms import ModelForm
@@ -28,6 +29,10 @@ from ..util import paginate, get_current_group #,get_language_cookie
 # from django.forms import ValidationError
 
 # from .student_edit import StudentEdit 357
+
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 def students_list(request):
     # check if we need to show only one group of students 
@@ -73,7 +78,7 @@ def students_list(request):
     return render(request,'students/students_list.html',
         context)
 
-
+@login_required
 def students_add(request):
     # return HttpResponse('<h1>Student Add Form</h1>')
     # if form was post:
@@ -273,8 +278,15 @@ class StudentUpdateForm(ModelForm):
         #     Submit('cancel_button', u'Cancel', css_class="btn btn-link"),
         # )
 
+class StudentAbstractView(View):
+    """docstring for StudentAbstractView"""
 
-class StudentAddView(CreateView):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StudentAbstractView, self).dispatch(*args, **kwargs)
+
+
+class StudentAddView(CreateView,StudentAbstractView):
     model = Student
     # fields = '__all__'
     template_name = 'students/students_edit.html'
@@ -284,9 +296,8 @@ class StudentAddView(CreateView):
         return reverse('home')
 
     def post(self, request, *args, **kwargs):
-
+        
         if request.POST.get('cancel_button'):
-
             messages.error(request, _(u"Add student cancelled.") )
 
             return HttpResponseRedirect(reverse('home'))
@@ -304,8 +315,13 @@ class StudentAddView(CreateView):
 
             return super(StudentAddView, self).post(request, *args, **kwargs)
 
+    # @method_decorator(login_required)
+    # def dispatch(self, *args, **kwargs):
+    #     return super(StudentAddView, self).dispatch(*args, **kwargs)
 
-class StudentUpdateView(UpdateView):
+
+
+class StudentUpdateView(UpdateView,StudentAbstractView):
     # class Meta:
     #     """docstring for Meta"""
     #     model = Student
@@ -331,14 +347,10 @@ class StudentUpdateView(UpdateView):
         if request.POST.get('cancel_button'):
  
             # stud = self.get_object()
-            messages.success(request, _(u"Edit student %(st)s cancelled.") % {'st':stud} )
-
-
-            
+            messages.success(request, _(u"Edit student %(st)s cancelled.") % {'st':stud} )        
             return HttpResponseRedirect(reverse('home'),messages)
 
         else:
-
             # TODO:add validation fields  ---form_valid
             if request.POST['first_name'] and request.POST['last_name']:
                 storage = get_messages(request) #removing all messages thanks Ivan Savchenko
@@ -348,8 +360,12 @@ class StudentUpdateView(UpdateView):
 
             return super(StudentUpdateView, self).post(request, *args, **kwargs)
 
+    # @method_decorator(login_required)
+    # def dispatch(self, *args, **kwargs):
+    #     return super(StudentUpdateView, self).dispatch(*args, **kwargs)
 
-class StudentDeleteView(DeleteView):
+
+class StudentDeleteView(DeleteView,StudentAbstractView):
     model = Student
     template_name = 'students/students_confirm_delete.html'
 
@@ -362,6 +378,10 @@ class StudentDeleteView(DeleteView):
         messages.success(request, _(u"Student %s successfully deleted.") % stud)
 
         return super(StudentDeleteView,self).post(request,*args,**kwargs)
+
+    # @method_decorator(login_required)
+    # def dispatch(self, *args, **kwargs):
+    #     return super(StudentDeleteView, self).dispatch(*args, **kwargs)
 
 
 def students_delete_my(request, pk):
