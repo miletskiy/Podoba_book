@@ -23,7 +23,7 @@ from crispy_forms.bootstrap import FormActions
 from django.contrib import messages
 from django.contrib.messages import get_messages
 
-from ..util import paginate, get_current_group ,get_language_cookie
+from ..util import paginate, get_current_group #,get_language_cookie
 
 # from django.forms import ValidationError
 
@@ -68,7 +68,8 @@ def students_list(request):
         var_name='students')
 
     # return render(request,'students/students_list.html',
-    #     {'students':students})    
+    #     {'students':students})
+
     return render(request,'students/students_list.html',
         context)
 

@@ -15,6 +15,9 @@ import os
 
 from django.conf import global_settings
 
+# setting from book:
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -29,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+# from django.contrib.auth
 # Application definition
 
 INSTALLED_APPS = (
@@ -42,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites.models',
     'crispy_forms',
+    'registration',
     'students',
 )
 
@@ -63,7 +67,8 @@ ROOT_URLCONF = 'studentsdb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [BASE_DIR+'/templates/'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,12 +78,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
                 "students.context_processors.groups_processor",
-                "students.context_processors.lang_processor",
+                # "students.context_processors.lang_processor",
                 "studentsdb.context_processors.students_proc",
             ],
         },
     },
 ]
+
+from django.contrib.auth.context_processors import auth
 
 WSGI_APPLICATION = 'studentsdb.wsgi.application'
 
@@ -239,7 +246,7 @@ LOGGING = {
     }
 }
 
-
+REGISTRATION_OPEN = True
 
 
 

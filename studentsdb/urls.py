@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from students.views.testview import StudentList
+# from students.views.testview import StudentList
 
 # from students.views.contact_admin_class import ContactAdmin
 
@@ -34,6 +34,10 @@ from students.views.groups import GroupAddView, GroupEditView, GroupDeleteView
 from students.views.journal import JournalView
 
 from students.views.exams import ExamAddView,ExamEditView,ExamDeleteView
+
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
+from django.views.generic.base import RedirectView, TemplateView
 
 js_info_dict = {
     'packages':('students'),
@@ -137,7 +141,7 @@ urlpatterns = patterns('',
     #         name='contact_admin'),
 
     # test form
-    url(r'^student-list/$', StudentList.as_view()),
+    # url(r'^student-list/$', StudentList.as_view()),
 
 # Domashka 343
 #     url(r'^contact/', include('contact_form.urls')),
@@ -151,6 +155,20 @@ urlpatterns = patterns('',
  # Domashka 526
     url(r'^log/$', 'students.views.logentries.log_list',
         name='log'),
+
+    # User Related urls
+    # url(r'^users/profile/$', login_required(TemplateView.as_view(
+    #     template_name='registration/profile.html')), name='profile'),
+
+    url(r'^users/logout/$', auth_views.logout, kwargs={'next_page': 'home'},
+        name='auth_logout'),
+    url(r'^register/complete/$', RedirectView.as_view(pattern_name='home'),
+        name='registration_complete'),
+    url(r'^users/', include('registration.backends.simple.urls',
+        namespace='users')),
+    # url(r'^accounts/', include('registration.backends.default.urls',
+    #     namespace='users')),
+
 
     #Default admin url
     url(r'^admin/', include(admin.site.urls)),

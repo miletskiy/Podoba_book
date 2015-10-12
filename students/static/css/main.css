@@ -49,6 +49,12 @@ border-top: 1px solid #dddddd;
   transform:scale(1.3);
 }
 
+/*User Toolbar*/
+#user-toolbar{
+  margin-top: 10px;
+  text-align: right;
+}
+
 
 /* Language Selector */
 /*#languge-selector select{
