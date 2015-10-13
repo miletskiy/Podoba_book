@@ -46,7 +46,9 @@ INSTALLED_APPS = (
     'django.contrib.sites.models',
     'crispy_forms',
     'registration',
+    'social.apps.django_app.default',
     'students',
+    'studentsdb',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,6 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
                 "students.context_processors.groups_processor",
                 # "students.context_processors.lang_processor",
                 "studentsdb.context_processors.students_proc",
@@ -248,7 +252,23 @@ LOGGING = {
 
 REGISTRATION_OPEN = True
 
+ACCOUNT_ACTIVATION_DAYS = 3
+
 LOGIN_URL = 'users:auth_login'
 LOGOUT_URL = 'users:auth_logout'
+
+AUTHENTICATION_BACKENDS = (
+    # 'social.backends.facebook.FacebookOAuth2',
+    'social.backends.facebook.Facebook2OAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    )
+# from social.backends.facebook import Facebook2AppOAuth2
+from social.backends.facebook import Facebook2OAuth2
+
+SOCIAL_AUTH_FACEBOOK_KEY = '571465946336791'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'c3460c81d831b0e181b8eec60e9f8c6a'
+
+
+
 
 
