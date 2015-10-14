@@ -168,8 +168,8 @@ urlpatterns = patterns('',
     url(r'^register/complete/$', RedirectView.as_view(pattern_name='home'),
         name='registration_complete'),
     #
-    # url(r'^users/profile/$', login_required(TemplateView.as_view(
-    #            template_name='registration/profile.html')), name='profile'),
+    url(r'^users/profile/$', login_required(TemplateView.as_view(
+               template_name='registration/profile.html')), name='profile'),
 
     url(r'^accounts/profile/$', login_required(TemplateView.as_view(
         template_name='registration/profile.html')), name='profile'),
