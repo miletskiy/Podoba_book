@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
@@ -12,6 +11,9 @@ from ..models.student import  Student
 from ..models.monthjournal import MonthJournal
 from ..util import paginate, get_current_group
 from django.shortcuts import render
+
+# from django.utils.translation import ugettext as _
+
 
 class JournalView(TemplateView):
     template_name = 'students/journal.html'
@@ -48,19 +50,9 @@ class JournalView(TemplateView):
         myear, mmonth = month.year, month.month
         number_of_days = monthrange(myear, mmonth)[1]
         context['month_header'] = [{'day': d,
-            'verbose': day_abbr[weekday(myear, mmonth, d)][:2]}
+            'verbose': day_abbr[weekday(myear, mmonth, d)][:3]}
             for d in range(1, number_of_days+1)]
 
-        # context['cur_month'] = '2015-09-01'
-        # context['month_verbose'] = u"Вересень"
-
-
-        # context['month_header'] = [
-        #     {'day': 1, 'verbose': 'Пн'},
-        #     {'day': 2, 'verbose': 'Вт'},
-        #     {'day': 3, 'verbose': 'Cр'},
-        #     {'day': 4, 'verbose': 'Чт'},
-        #     {'day': 5, 'verbose': 'Пт'}]
 
             #get all students from database, or just one if we need to 
             # display journal for one student
@@ -78,6 +70,7 @@ class JournalView(TemplateView):
         else:
             # otherwise show all students
             queryset = Student.objects.all().order_by('last_name')
+            # queryset = []
 
             
 
@@ -142,28 +135,3 @@ class JournalView(TemplateView):
         # return JsonResponse({'key': 'value'})
         return JsonResponse({'status': 'success'})
 
-# from django.shortcuts import render
-# from django.http import HttpResponse
-
-# # Views for Journal
-# def journal_list(request):
-#     # return HttpResponse('<h1>Journal urls</h1>')
-#     students = (
-#         {'id':1,
-#         'first_name':u'Андрей',
-#         'last_name':u'Корост',
-#         'ticket':235,
-#         },
-#         {'id':2,
-#         'first_name':u'Светлана',
-#         'last_name':u'Ильдирова',
-#         'ticket':2358,
-#         },
-#         {'id':3,
-#         'first_name':u'Василий',
-#         'last_name':u'Пупкин',
-#         'ticket':2935,
-#         },
-#     )
-#     return render(request, 'students/journal_list.html',
-#         {'students': students})

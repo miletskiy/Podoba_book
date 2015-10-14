@@ -23,7 +23,7 @@ function initJournal () {
       'error': function(xhr, status, error){
         // var illia = "hello illia";
         // if (error) return illia;
-        alert(error);
+        alert(gettext('There was an error on the server. Please, try again a bit later.'));
         indicator.hide();
         // warmes.text(error);
         // warmes.html(error);
@@ -61,6 +61,7 @@ function initGroupSelector() {
     return true;
   });
 }
+
 function initDateFields() { 
     $('input.dateinput').datetimepicker({
       'format': 'YYYY-MM-DD',
@@ -107,7 +108,8 @@ function initEditStudentPage() {
       'success': function(data, status, xhr){
         // check if we got successfull response from the server
         if (status != 'success') {
-          alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
+          // alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
           return false;
         }
         // update modal window with arrived content from the server
@@ -127,7 +129,8 @@ function initEditStudentPage() {
         }); 
       },
       'error': function(){
-          alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
+          // alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
           return false
       }
     });
@@ -150,7 +153,7 @@ function initEditStudentForm(form, modal) {
   form.ajaxForm({
     'dataType': 'html',
     'error': function(){
-        alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+        alert(gettext('There was an error on the server. Please, try again a bit later.'));
         return false;
     },
     'success': function(data, status, xhr) {
@@ -209,7 +212,7 @@ function initEditGroupPage() {
       'success': function(data, status, xhr){
         // check if we got successfull response from the server
         if (status != 'success') {
-          alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
           return false;
         }
         // update modal window with arrived content from the server
@@ -230,7 +233,7 @@ function initEditGroupPage() {
         }); 
       },
       'error': function(){
-          alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
           return false
       }
     });
@@ -265,7 +268,7 @@ function initEditGroupForm(form, modal) {
     //   return true;
     // },
     'error': function(){
-        alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+        alert(gettext('There was an error on the server. Please, try again a bit later.'));
         return false;
     },
     // beforeSend: function() {
@@ -342,7 +345,7 @@ function initEditExamPage() {
       'success': function(data, status, xhr){
         // check if we got successfull response from the server
         if (status != 'success') {
-          alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
           return false;
         }
         // update modal window with arrived content from the server
@@ -363,7 +366,7 @@ function initEditExamPage() {
         }); 
       },
       'error': function(){
-          alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+          alert(gettext('There was an error on the server. Please, try again a bit later.'));
           return false
       }
     });
@@ -388,7 +391,7 @@ function initEditExamForm(form, modal) {
   form.ajaxForm({
     'dataType': 'html',
     'error': function(){
-        alert('Помилка на сервері. Спробуйте будь-ласка пізніше.');
+        alert(gettext('There was an error on the server. Please, try again a bit later.'));
         return false;
     },
     'success': function(data, status, xhr) {
@@ -414,6 +417,30 @@ function initEditExamForm(form, modal) {
 }
 
 
+// ----------------------------____________________--------------------------
+
+function initLangSelector() {
+  // look up select element with langs and attach our even handler
+  // on field "change" event
+  $('#languge-selector select').change(function(event){
+    // get value of currently selected languge option
+    var lang = $(this).val();
+
+    if (lang) {
+      // set cookie with expiration date 1 year since now;
+      // cookie creation function takes period in days
+        $.cookie('current_lang', lang, {'path': '/', 'expires': 365});
+    } else {
+    //   // otherwise we delete the cookie
+      $.removeCookie('current_lang', {'path': '/'});
+    }
+
+    // and reload a page
+    location.reload(true);
+
+    return true;
+  });
+}
 
 
 
@@ -426,6 +453,7 @@ $(document).ready(function () {
   initEditGroupPage();
   // updatePageContext();
   initEditExamPage();
+  initLangSelector();
 });
 
     // Setup the ajax indicator

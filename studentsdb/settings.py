@@ -15,6 +15,9 @@ import os
 
 from django.conf import global_settings
 
+# setting from book:
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -29,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+# from django.contrib.auth
 # Application definition
 
 INSTALLED_APPS = (
@@ -42,12 +45,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites.models',
     'crispy_forms',
+    'registration',
+    'social.apps.django_app.default',
     'students',
+    'studentsdb',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    # 'students.util.LocalChooseLang',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -62,21 +69,27 @@ ROOT_URLCONF = 'studentsdb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [BASE_DIR+'/templates/'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
-                # 'django.template.context_processors.i18n',
+                'django.template.context_processors.i18n',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
                 "students.context_processors.groups_processor",
+                # "students.context_processors.lang_processor",
                 "studentsdb.context_processors.students_proc",
             ],
         },
     },
 ]
+
+from django.contrib.auth.context_processors import auth
 
 WSGI_APPLICATION = 'studentsdb.wsgi.application'
 
@@ -109,13 +122,20 @@ TIME_ZONE = 'UTC'
 
 USE_L10N = True
 
+LANGUAGES = (
+	('pl', 'Polski'),
+	('en', 'English'),
+	('uk', 'Ukrainian'),
+)
+
+
 # LOCALE_PATHS = (
 #     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/uk',
 #     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/en',
 # )
-# LOCALE_PATHS = (
-#     os.path.join(BASE_DIR, 'locale'),
-# )
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'students/locale'),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -230,6 +250,23 @@ LOGGING = {
     }
 }
 
+REGISTRATION_OPEN = True
+
+ACCOUNT_ACTIVATION_DAYS = 3
+
+LOGIN_URL = 'users:auth_login'
+LOGOUT_URL = 'users:auth_logout'
+
+AUTHENTICATION_BACKENDS = (
+    # 'social.backends.facebook.FacebookOAuth2',
+    'social.backends.facebook.Facebook2OAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    )
+# from social.backends.facebook import Facebook2AppOAuth2
+from social.backends.facebook import Facebook2OAuth2
+
+SOCIAL_AUTH_FACEBOOK_KEY = '571465946336791'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'c3460c81d831b0e181b8eec60e9f8c6a'
 
 
 

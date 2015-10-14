@@ -114,14 +114,3 @@ def student_edit(request,pk):
 
 
 
-
-
-
-
-
-
-
-
-
-
-

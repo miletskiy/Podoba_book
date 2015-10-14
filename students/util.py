@@ -41,6 +41,7 @@ def get_groups(request):
     # get currently selected group
     cur_group = get_current_group(request)
 
+
     groups = []
     # groups = Group.objects.all().order_by('title')
     for group in Group.objects.all().order_by('title'):
@@ -74,5 +75,85 @@ def get_current_group(request):
             return group
     else:
         return None
+#
+# def get_language_cookie(request):
+#
+#     lng = request.COOKIES.get('current_lang')
+#
+#     if lng == 1:
+#         request['LANGUAGE_CODE'] = 'uk'
+#         return request['LANGUAGE_CODE']
+#
+#
+#     elif lng == 2:
+#         request['LANGUAGE_CODE']= 'en'
+#         return request['LANGUAGE_CODE']
+#
+#     elif lng == 3:
+#         request['LANGUAGE_CODE'] = 'pl'
+#         return request['LANGUAGE_CODE']
+#
+#
+# def get_current_language(request):
+#
+#     lang = request.COOKIES.get('current_lang')
+#
+#     languages = [
+#                 {
+#                 'value':1,
+#                 'name':'Українська',
+#                 'selected': False
+#             },
+#                 {
+#                 'value':2,
+#                 'name':'English',
+#                 'selected': False
+#             },
+#                 {
+#                 'value':3,
+#                 'name':'Polski',
+#                 'selected': False
+#             },
+#           ]
+#
+#     if lang:
+#         i = int(lang) - 1
+#         languages[i]['selected'] = True
+#         # request.LANGUAGE_CODE = 'en'
+#
+#         return languages
+#     else:
+#         return languages
+#
+# from django.middleware.locale import LocaleMiddleware
+#
+# from django.utils import translation
+#
+# class LocalChooseLang(LocaleMiddleware):
+#
+#
+#     def process_request(self, request):
+#         check_path = self.is_language_prefix_patterns_used()
+#         language = translation.get_language_from_request(
+#             request, check_path=check_path)
+#         translation.activate(language)
+#
+#         languages = get_current_language(request)
+#
+#         if languages[0]['selected']:
+#             request.LANGUAGE_CODE = 'uk'
+#
+#         elif languages[1]['selected']:
+#             request.LANGUAGE_CODE = 'en'
+#
+#         elif languages[2]['selected']:
+#             request.LANGUAGE_CODE = 'pl'
+#         else:
+#             request.LANGUAGE_CODE = translation.get_language()
+#
 
-        
+
+            
+
+
+

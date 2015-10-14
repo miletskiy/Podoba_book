@@ -29,9 +29,43 @@ border-top: 1px solid #dddddd;
    color: #555555;
 }
 
-#group-selector { 
+#group-selector {
   margin-top: 30px;
 }
+
+#lang-flags {
+  margin-top: 25px;
+}
+
+#img-lang{
+  transform:scale(0.9);
+/*  margin:0 !important; 
+  padding: 0 !important;*/
+/*  height: 70%;
+  width:90%;*/
+}
+
+#img-lang:hover{
+  transform:scale(1.3);
+}
+
+/*User Toolbar*/
+#user-toolbar{
+  margin-top: 10px;
+  text-align: right;
+}
+
+
+/* Language Selector */
+/*#languge-selector select{
+   margin: 0;
+   width: 65%;
+   background-color: #ffffff;
+   border: 1px solid #cccccc;
+   height: 30px;
+   line-height: 30px;
+   color: #555555;
+}*/
 
 /* Form Styles */
 textarea,
