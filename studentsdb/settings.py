@@ -149,7 +149,7 @@ STATIC_URL = '/static/'
 #         "studentsdb.context_processors.students_proc",)
 
 # PORTAL_URL = 'http://www.mysite.com'
-PORTAL_URL = 'http://localhost:8000'
+PORTAL_URL = 'http://localhost:8024'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'..','media')
