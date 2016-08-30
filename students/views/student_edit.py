@@ -18,12 +18,13 @@ from django.forms import ModelForm
 # class StudentEdit(ModelForm):forms.Form
 #     class Meta:
 #         model = Student
-#         fields = '__all__'
+        # fields = '__all__'
 
 class StudentEdit(ModelForm):
     class Meta:
         model=Student
         fields = []
+        # fields = '__all__'
 
     groups = Group.objects.all().order_by('title')
 

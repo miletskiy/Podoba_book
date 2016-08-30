@@ -120,12 +120,12 @@ urlpatterns = patterns('',
     # url(r'^exams/$', 'students.views.exams.exams_list', name='exams'),
 
     # url(r'^exams/add/$', 'students.views.exams.exams_add',
-    #      name='exams_add'),   
+    #      name='exams_add'),
     url(r'^exams/add/$', login_required(ExamAddView.as_view()),
          name='exams_add'),
 
     # url(r'^exams/(?P<eid>\d+)/edit/$','students.views.exams.exams_edit',
-    #     name='exams_edit'),   
+    #     name='exams_edit'),
     url(r'^exams/(?P<pk>\d+)/edit/$', login_required(ExamEditView.as_view()),
             name='exams_edit'),
 
