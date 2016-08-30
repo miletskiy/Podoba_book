@@ -1,0 +1,110 @@
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %}Події{% endblock meta_title %}
+
+{% block title %}Журнал подій{% endblock title %}
+
+ {% block status_message %}
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+ Будь-ласка, виправте наступні помилки
+ </div>
+  {% endif %}
+
+{% if messages %}
+  <div class="alert alert-warning">
+          {% for message in messages %}
+              {{ message }}
+          {% endfor %}
+  </div>
+{% endif %}
+
+{% endblock  %}
+
+
+
+{% block content %}
+<!--<style type="text/css">.col-xs-12, .col-xs-4, .col-xs-6 {border: 1px solid red;}</style>-->
+{% if not logs %}
+
+<div class="alert alert-info col-xs-12">
+    Поки немає подій. Будь-ласка, 
+    <a href="{% url "students_add" %}"><b>додайте</b></a> студента.
+</div>
+
+ {% else %}
+
+
+<!-- Start Exams Listing &uarr;-->
+          <table class="table table-hover table-striped">
+           {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+            <thead>
+              <tr>
+
+                <th><a href="{% url "log" %}?order_by=id{% if order_by == 'id' and reverse != '1' %}&amp;reverse=1{% endif %}">№
+                  {% if order_by == 'id' and reverse != '1' %}&uarr;
+                    {%elif order_by == 'id' and reverse == '1' %}&darr;
+                  {% endif %}
+                </a></th>
+    
+                <th><a href="{% url "log" %}?order_by=exam_day{% if reverse != '1'%}&amp;reverse=1{% endif %}">ID процесу
+                    {% if order_by == ''  %}&uarr;
+                      {% elif order_by == 'exam_day' and reverse != '1' %}&uarr;
+                      {% elif order_by == 'exam_day' and reverse == '1' %}&darr;
+                    {% endif %}
+                </a></th>
+                <th><a href="{% url "log" %}?order_by=nazva{% if order_by == 'nazva' and reverse != '1' %}&amp;reverse=1{% endif %}">Рівень логування
+                  {% if order_by == 'nazva' and reverse != '1' %}&uarr;
+                    {%elif order_by == 'nazva' and reverse == '1' %}&darr;
+                  {% endif %}
+                </a></th>
+                <th><a href="{% url "exams" %}?order_by=prepod{% if order_by == 'prepod' and reverse != '1' %}&amp;reverse=1{% endif %}">Дата та час події
+                  {% if order_by == 'prepod' and reverse != '1' %}&uarr;
+                    {%elif order_by == 'prepod' and reverse == '1' %}&darr;
+                  {% endif %}
+                </a></th>
+                <th><a href="">Назва модулю
+                        </a></th>
+                <th><a href="">Повідомлення
+                        </a></th>
+
+              </tr>
+            </thead>
+            {% endwith %}
+            <tbody>
+
+        {% for log in logs %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ log.action_flag }}</td>
+                <td><a class="exam-edit-form-link"
+                       href=''>{{ log.content_type }}</td>
+                <td>{{ log.action_time }}</td>
+                <td><a class="group-edit-form-link"
+                       href=''>
+                    {{ log.content_type }}</td>
+
+
+                <td>
+                  {{ log.change_message }}
+              </td>
+            </tr>
+            {% endfor %}
+            
+          </tbody>
+        </table>
+{% endif %}
+
+<!-- End Students Listing -->
+
+{% with object_list=log_entries %}
+  {% include "students/pagination.html" %}
+{% endwith %}
+         
+{% endblock content %}
+
+
+<!-- End Main Page Content -->
+
