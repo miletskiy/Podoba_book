@@ -17,7 +17,7 @@ from django.views.generic import UpdateView, DeleteView, CreateView
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 
-from crispy_forms.helper import FormHelper 
+from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
 
@@ -35,7 +35,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def students_list(request):
-    # check if we need to show only one group of students 
+    # check if we need to show only one group of students
     current_group = get_current_group(request)
     if current_group:
         students = Student.objects.filter(student_group=current_group)
@@ -92,19 +92,19 @@ def students_add(request):
             data = {'middle_name': request.POST.get('middle_name'),
                     'notes': request.POST.get('notes')}
             # validate user input
-            first_name = request.POST.get('first_name', '').strip() 
+            first_name = request.POST.get('first_name', '').strip()
             if not first_name:
                 errors['first_name'] = _(u"First Name field is required")
             else:
                 data['first_name'] = first_name
 
-            last_name = request.POST.get('last_name', '').strip() 
+            last_name = request.POST.get('last_name', '').strip()
             if not last_name:
                 errors['last_name'] = _(u"Last Name field is required")
             else:
                 data['last_name'] = last_name
 
-            birthday = request.POST.get('birthday', '').strip() 
+            birthday = request.POST.get('birthday', '').strip()
             if not birthday:
                 errors['birthday'] = _(u"Birthday field is required")
             else:
@@ -115,12 +115,12 @@ def students_add(request):
                 else:
                     data['birthday'] = birthday
 
-            ticket = request.POST.get('ticket', '').strip() 
+            ticket = request.POST.get('ticket', '').strip()
             if not ticket:
-                errors['ticket'] = _(u"Ticket number is required") 
+                errors['ticket'] = _(u"Ticket number is required")
             else:
                 data['ticket'] = ticket
-            
+
             student_group = request.POST.get('student_group', '').strip()
             if not student_group:
                 errors['student_group'] = _(u"Please, select group for student")
@@ -131,7 +131,7 @@ def students_add(request):
                 else:
                     data['student_group'] = groups[0]
 
-            photo = request.FILES.get('photo') 
+            photo = request.FILES.get('photo')
             # validation with Django built-methods
 
             if photo:
@@ -142,7 +142,7 @@ def students_add(request):
                     errors['photo'] = _(u"Too big file. Max 2.5 Mb")
                 elif name_file[-4:] not in file_extensions:
                     errors['photo'] = _(u"File extension incorrect. Choose next: *.jpg, *.jpeg, *.png, *.gif")
-                    # errors['photo'] = str(photo.name) 
+                    # errors['photo'] = str(photo.name)
                 else:
                     data['photo'] = photo
             # if data correct:
@@ -155,7 +155,7 @@ def students_add(request):
                 #                   middle_name=request.POST['middle_name'],
                 #                   birthday=request.POST['birthday'],
                 #                   ticket=request.POST['ticket'],
-                #                   student_group=Group.objects.get(pk=request.POST['student_group']), 
+                #                   student_group=Group.objects.get(pk=request.POST['student_group']),
                 #                   photo=request.FILES['photo'],
                 #                  )
                 student.save()
@@ -167,7 +167,7 @@ def students_add(request):
                 return HttpResponseRedirect(reverse('home'),messages)
 
 
-            # if data incorrect:   
+            # if data incorrect:
             else:
                 # return form with mistakes
 
@@ -181,12 +181,12 @@ def students_add(request):
 
             # return HttpResponseRedirect(
             #     u'%s?status_message=Add student cancelled!' %
-            #     reverse('home')) 
+            #     reverse('home'))
             messages.info(request, _(u"Add student cancelled."))
             return HttpResponseRedirect(reverse('home'))
     # if form was NOT post:
     else:
-        # return form 
+        # return form
         return render(request, 'students/students_add.html',
                         {'groups': Group.objects.all().order_by('title')})
 
@@ -296,7 +296,7 @@ class StudentAddView(CreateView,StudentAbstractView):
         return reverse('home')
 
     def post(self, request, *args, **kwargs):
-        
+
         if request.POST.get('cancel_button'):
             messages.error(request, _(u"Add student cancelled.") )
 
@@ -345,9 +345,9 @@ class StudentUpdateView(UpdateView,StudentAbstractView):
         # pk= stud.id
 
         if request.POST.get('cancel_button'):
- 
+
             # stud = self.get_object()
-            messages.success(request, _(u"Edit student %(st)s cancelled.") % {'st':stud} )        
+            messages.success(request, _(u"Edit student %(st)s cancelled.") % {'st':stud} )
             return HttpResponseRedirect(reverse('home'),messages)
 
         else:
@@ -386,7 +386,7 @@ class StudentDeleteView(DeleteView,StudentAbstractView):
 
 def students_delete_my(request, pk):
     """ Delete student by hands """
-    
+
     student = Student.objects.get(pk = pk)
     fn = student.first_name
     ln = student.last_name

@@ -20,7 +20,7 @@ from django.conf import global_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+from ../students
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -133,9 +133,9 @@ LANGUAGES = (
 #     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/uk',
 #     '/data/work/buildouts/python/studentsdb/src/studentsdb/students/locale/en',
 # )
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'students/locale'),
-)
+# LOCALE_PATHS = (
+#     os.path.join(BASE_DIR, 'students/locale'),
+# )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

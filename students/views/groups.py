@@ -17,7 +17,7 @@ from ..util import  get_current_group, paginate
 
 from django.forms import ModelForm
 
-from crispy_forms.helper import FormHelper 
+from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.bootstrap import FormActions
 
@@ -27,14 +27,14 @@ from django.utils.translation import ugettext as _
 
 # Views for Groups
 def groups_list(request):
-    # check if we need to show only one group of students 
+    # check if we need to show only one group of students
     current_group = get_current_group(request)
     if current_group:
         groups = Group.objects.filter(id = current_group.id)
     else:
         # otherwise show all gpoups
         groups = Group.objects.all().order_by('title')
-        
+
 
     # Order groups list
     order_by = request.GET.get('order_by', '')
@@ -65,7 +65,7 @@ def groups_list(request):
     #     {'groups': groups})
 
     return render(request, 'students/groups_list.html', context)
-    
+
 def groups_add(request):
     # return HttpResponse('<h1>Group Add Form</h1>')
 
@@ -91,14 +91,14 @@ def groups_add(request):
                 if not starosta:
                     group = Group(
                         title = request.POST['title'],
-                        notes = request.POST['notes'] 
+                        notes = request.POST['notes']
                         )
                     group.save()
                 else:
                     group = Group(
                     title = request.POST['title'],
                     starosta = Student.objects.get(pk=request.POST['starosta']),
-                    notes = request.POST['notes'] 
+                    notes = request.POST['notes']
                     )
                     group.save()
                 messages.success(request, _(u"The group %s was successfully added.") % Group.objects.last())
@@ -122,7 +122,7 @@ def groups_add(request):
     #       return form
         return render(request,'students/groups_add.html',
                       {'students':Student.objects.all().order_by('last_name')})
-    
+
 
 # Group add form for generic views
 class GroupAddForm(ModelForm):
@@ -180,7 +180,7 @@ class GroupEditForm(ModelForm):
         self.helper.layout.fields.append(FormActions(
             Submit('edit_button', _(u'Save'), css_class="btn btn-primary"),
             Submit('cancel_button', _(u'Cancel'), css_class="btn btn-link"),
-        ))    
+        ))
 
 # Base view for Group
 class BaseGroupFormView(object):
@@ -217,7 +217,7 @@ class GroupEditView(BaseGroupFormView, UpdateView):
     model = Group
     template_name = 'students/groups_add_edit.html'
     form_class = GroupEditForm
- 
+
     def post(self, request, *args, **kwargs):
         group = self.get_object()
 
