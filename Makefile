@@ -9,7 +9,7 @@ BIND_PORT=8024
 MANAGE=python manage.py
 DJANGO_SETTINGS_MODULE=studentsdb.settings
 
-# TEST_APP=apps
+# TEST_APP=studentsdb,students
 # TEST_OPTIONS=-v2 --keepdb
 
 include

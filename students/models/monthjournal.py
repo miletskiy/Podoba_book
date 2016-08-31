@@ -11,9 +11,9 @@ class MonthJournal(models.Model):
         verbose_name_plural = _(u"Monthly Journals")
 
     student = models.ForeignKey('Student',
-        verbose_name=_(u"Student"),
-        blank=False,
-        unique_for_month='date')
+                                verbose_name=_(u"Student"),
+                                blank=False,
+                                unique_for_month='date')
 
     # we only need year and month, so always set day to first day of the month
     date = models.DateField(
@@ -55,4 +55,4 @@ class MonthJournal(models.Model):
 
     def __unicode__(self):
         return u'%s: %d, %d' % (self.student.last_name, self.date.month,
-            self.date.year)
+                                self.date.year)
