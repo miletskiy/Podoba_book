@@ -12,6 +12,7 @@ from .models.monthjournal import MonthJournal
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm, ValidationError
 
+
 class StudentFormAdmin(ModelForm):
 
     def clean_student_group(self):
@@ -21,54 +22,54 @@ class StudentFormAdmin(ModelForm):
         # get group where current student is a leader
         groups = Group.objects.filter(starosta=self.instance)
         if len(groups) > 0 and \
-            self.cleaned_data['student_group'] != groups[0]:
+                self.cleaned_data['student_group'] != groups[0]:
             raise ValidationError(u'Студент є старостою іншої групи.',
-                code='invalid')
+                                  code='invalid')
 
         return self.cleaned_data['student_group']
 
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'ticket', 'student_group','photo']
+    list_display = ['last_name', 'first_name',
+                    'ticket', 'student_group', 'photo']
     list_display_links = ['last_name', 'first_name']
     # list_editable = ['student_group']
     ordering = ['last_name']
     list_filter = ['student_group']
     list_per_page = 7
     search_fields = ['last_name', 'first_name', 'middle_name', 'ticket',
-        'notes']
+                     'notes']
     form = StudentFormAdmin
-    actions = ['make_krasivo', 'change_group','copy_student' ]
-
-
+    actions = ['make_krasivo', 'change_group', 'copy_student']
 
 
 # Testoviy method for actions. domashka370
 
-    def make_krasivo(self, request , queryset ):
+    def make_krasivo(self, request, queryset):
         if len(queryset) == 1:
             message_bit = "For selected student"
         else:
             message_bit = "For selected students"
         self.message_user(request, "%s made good." % message_bit)
-        
+
     make_krasivo.short_description = u'Сделать хорошо'
 
 # Action deletion student from group. domashka370
-    def change_group(self, request , queryset):
-        queryset.update(student_group = None)
-        self.message_user(request, "Group was changed. Student free for any group now.")
-    
+    def change_group(self, request, queryset):
+        queryset.update(student_group=None)
+        self.message_user(
+            request, "Group was changed. Student free for any group now.")
+
     change_group.short_description = u"Удалить из группы"
 
 # Copy selected student. domashka370
 
-    def copy_student(self, request , queryset):
+    def copy_student(self, request, queryset):
         for ob in queryset:
             ob.pk = None
             ob.save()
         self.message_user(request, "Selected student was copied.")
-        
+
     copy_student.short_description = u"Копировать студента"
 
     def view_on_site(self, obj):
@@ -87,14 +88,17 @@ class GroupFormAdmin(ModelForm):
         students = Student.objects.filter(student_group=self.instance)
 
         # if self.cleaned_data['starosta'] != students[0]:
-        # if self.cleaned_data['starosta'] not in students:# and len(students) > 0:
-        if self.cleaned_data['starosta'] in students or self.cleaned_data['starosta'] is None:# and len(students) > 0:
-        # if self.cleaned_data['starosta'] in students :# and len(students) > 0:
+        # if self.cleaned_data['starosta'] not in students:# and len(students)
+        # > 0:
+        # and len(students) > 0:
+        if self.cleaned_data['starosta'] in students or self.cleaned_data['starosta'] is None:
+            # if self.cleaned_data['starosta'] in students :# and len(students)
+            # > 0:
             return self.cleaned_data['starosta']
         else:
             raise ValidationError(u'Студент не належить до обранои групи.\
                                     Оберіть когось з цієї групи.',
-                code='invalid')
+                                  code='invalid')
 
         # return self.cleaned_data['starosta']
         # groups = Group.objects.filter(starosta=self.instance)
@@ -110,7 +114,7 @@ class GroupAdmin(admin.ModelAdmin):
     ordering = ['title']
     list_filter = ['title']
     list_per_page = 5
-    search_fields = ['title', 'starosta','notes']
+    search_fields = ['title', 'starosta', 'notes']
     form = GroupFormAdmin
     # actions = ['make_krasivo', 'change_group','copy_student' ]
 
@@ -118,6 +122,8 @@ class GroupAdmin(admin.ModelAdmin):
         return reverse('groups_edit', kwargs={'pk': obj.id})
 
 # Change admin view for Groups
+
+
 class ExamAdmin(admin.ModelAdmin):
     """Describe mapping for Group in admin"""
     list_display = ['exam_day', 'nazva', 'prepod', 'exam_group']
@@ -126,7 +132,7 @@ class ExamAdmin(admin.ModelAdmin):
     ordering = ['exam_day']
     list_filter = ['prepod']
     list_per_page = 7
-    search_fields = ['nazva', 'prepod','notes']
+    search_fields = ['nazva', 'prepod', 'notes']
     # form = GroupFormAdmin
     # actions = ['make_krasivo', 'change_group','copy_student' ]
 
@@ -134,7 +140,7 @@ class ExamAdmin(admin.ModelAdmin):
         return reverse('exams_edit', kwargs={'pk': obj.id})
 
 
-admin.site.register(Student,StudentAdmin)
+admin.site.register(Student, StudentAdmin)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(Exam,ExamAdmin)
+admin.site.register(Exam, ExamAdmin)
 admin.site.register(MonthJournal)
