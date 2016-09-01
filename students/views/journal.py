@@ -7,18 +7,16 @@ from django.http import JsonResponse
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 
-from ..models.student import  Student
+from ..models.student import Student
 from ..models.monthjournal import MonthJournal
 from ..util import paginate, get_current_group
 from django.shortcuts import render
-
-# from django.utils.translation import ugettext as _
 
 
 class JournalView(TemplateView):
     template_name = 'students/journal.html'
 
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         # get context data from TemplateView class
         context = super(JournalView, self).get_context_data(**kwargs)
 
@@ -30,8 +28,6 @@ class JournalView(TemplateView):
             # otherwise just displaying current month data
             today = datetime.today()
             month = date(today.year, today.month, 1)
-        # prev_month = month
-        # next_month = month
 
         # calculate current, previous and next month details;
         # we need this for month navigation element in template
@@ -50,29 +46,20 @@ class JournalView(TemplateView):
         myear, mmonth = month.year, month.month
         number_of_days = monthrange(myear, mmonth)[1]
         context['month_header'] = [{'day': d,
-            'verbose': day_abbr[weekday(myear, mmonth, d)][:3]}
-            for d in range(1, number_of_days+1)]
+                                    'verbose': day_abbr[weekday(myear, mmonth, d)][:3]}
+                                   for d in range(1, number_of_days + 1)]
 
-
-            #get all students from database, or just one if we need to 
-            # display journal for one student
-        # if kwargs.get('pk'):
-        #     queryset = [Student.objects.get(pk=kwargs['pk'])]
-        # else:
-        #     queryset = Student.objects.all().order_by('last_name')
-
-       # check if we need to show only one group of students 
+       # check if we need to show only one group of students
         current_group = get_current_group(self.request)
         if current_group:
-            queryset = Student.objects.filter(student_group=current_group).order_by('last_name')
+            queryset = Student.objects.filter(
+                student_group=current_group).order_by('last_name')
         elif kwargs.get('pk'):
             queryset = [Student.objects.get(pk=kwargs['pk'])]
         else:
             # otherwise show all students
             queryset = Student.objects.all().order_by('last_name')
             # queryset = []
-
-            
 
         update_url = reverse('journal')
 
@@ -89,11 +76,11 @@ class JournalView(TemplateView):
 
             # fill in days presence list for current student
             days = []
-            for day in range(1, number_of_days+1):
+            for day in range(1, number_of_days + 1):
                 days.append({
                     'day': day,
                     'present': journal and getattr(journal, 'present_day%d' %
-                        day, False) or False,
+                                                   day, False) or False,
                     'date': date(myear, mmonth, day).strftime(
                         '%Y-%m-%d'),
                 })
@@ -107,13 +94,13 @@ class JournalView(TemplateView):
 
         # apply pagination, 10 students per page
         context = paginate(students, 5, self.request, context,
-            var_name='students')
+                           var_name='students')
 
         # finally return updated context
         # with paginated students
         return context
-    
-    def post(self,request,*args,**kwargs):
+
+    def post(self, request, *args, **kwargs):
         # return JsonResponse({'key':'value'})
         data = request.POST
 
@@ -125,13 +112,10 @@ class JournalView(TemplateView):
 
         # get or create journal object for given student and month
         journal = MonthJournal.objects.get_or_create(student=student,
-             date=month)[0]
+                                                     date=month)[0]
 
         # set new presence on journal for given student and save result
         setattr(journal, 'present_day%d' % current_date.day, present)
         journal.save()
 
-        # return success status
-        # return JsonResponse({'key': 'value'})
         return JsonResponse({'status': 'success'})
-

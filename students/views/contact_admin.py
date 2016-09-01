@@ -16,10 +16,9 @@ from crispy_forms.layout import Submit
 from django.contrib import messages
 
 from django.dispatch import Signal
-# from students.signals import send_signal_email_for_admin
-# from contact_form.forms import ContactForm
 from django.contrib.auth.decorators import permission_required
 from django.utils.translation import ugettext as _
+
 
 class ContactForm(forms.Form):
 
@@ -45,7 +44,7 @@ class ContactForm(forms.Form):
         self.helper.add_input(Submit('send_button', _(u'Send')))
 
     from_email = forms.EmailField(
-        label= _(u'Your email'))
+        label=_(u'Your email'))
 
     subject = forms.CharField(
         label=_(u'Subject'),
@@ -58,20 +57,14 @@ class ContactForm(forms.Form):
 
 # Signal after sending mail to admin 526
 # Create signal.
-email_was_send = Signal(providing_args=['subject','email'])
-
-# These function is receiver. It will receive
-# the signal sent  by the sender.
-def simple_receiver(**kwargs):
-    # subject, email = kwargs['subject'], kwargs['email']
-    # print 'Receiver # 1'
-    # print '\tsubject: %s, email: %s\n' % (subject, email)
-    pass
+email_was_send = Signal(providing_args=['subject', 'email'])
 
 email_was_send.connect(simple_receiver)
 
-def send_signal_email_for_admin(subject,email):
-    email_was_send.send(sender='send_signal_email_for_admin', subject=subject, email=email)
+
+def send_signal_email_for_admin(subject, email):
+    email_was_send.send(sender='send_signal_email_for_admin',
+                        subject=subject, email=email)
 
 
 @permission_required('auth.add_user')
@@ -82,7 +75,7 @@ def contact_admin(request):
         form = ContactForm(request.POST)
 
         # check whether user data is valid:
-        if form.is_valid(): # send email
+        if form.is_valid():  # send email
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             from_email = form.cleaned_data['from_email']
@@ -90,32 +83,23 @@ def contact_admin(request):
             try:
                 send_mail(subject, message, from_email, [ADMIN_EMAIL])
             except Exception:
-                messages.error(request,_(u"When sending a letter, an unexpected error occurred.\
-                 Try to use this form later.") )
+                messages.error(request, _(u"When sending a letter, an unexpected error occurred.\
+                 Try to use this form later."))
                 logger = logging.getLogger(__name__)
                 logger.exception('message')
             else:
-                send_signal_email_for_admin(subject,from_email)
-                # mail_logger=logging.getLogger(__name__)
-                mail_logger=logging.getLogger('email_was_send')
-                # mail_logger.log('error','custom message',from_email, subject)
-                # mail_logger.error("Email from %s was send with next subject: %s", from_email, subject)
-                mail_logger.info("Email from %s was send with next subject: %s", from_email, subject)
-                messages.success(request, _(u'The message was successfully sent'))
+                send_signal_email_for_admin(subject, from_email)
+                mail_logger = logging.getLogger('email_was_send')
+                mail_logger.info(
+                    "Email from %s was send with next subject: %s", from_email, subject)
+                messages.success(request, _(
+                    u'The message was successfully sent'))
 
             # redirect to same contact page with success message
-            # return HttpResponseRedirect(
-            #     u'%s?status_message=%s' % (reverse('contact_admin'),message))
             return HttpResponseRedirect(reverse('contact_admin'))
 
     # if there was not POST render blank form
     else:
         form = ContactForm()
 
-
     return render(request, 'contact_admin/form.html', {'form': form})
-
-
-
-
-
