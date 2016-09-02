@@ -123,9 +123,9 @@ TIME_ZONE = 'UTC'
 USE_L10N = True
 
 LANGUAGES = (
-	('pl', 'Polski'),
-	('en', 'English'),
-	('uk', 'Ukrainian'),
+    ('pl', 'Polski'),
+    ('en', 'English'),
+    ('uk', 'Ukrainian'),
 )
 
 
@@ -152,14 +152,15 @@ STATIC_URL = '/static/'
 PORTAL_URL = 'http://localhost:8024'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'..','media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 
 
 # email settings
 # please, set here you smtp server details and your admin email
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/data/work/buildouts/python/studentsdb/src/studentsdb/studentsdb/mylo' # change this to a proper location
+# change this to a proper location
+EMAIL_FILE_PATH = '/data/work/buildouts/python/studentsdb/src/studentsdb/studentsdb/mylo'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ADMIN_EMAIL = 's.miletskiy@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -188,7 +189,7 @@ LOGGING = {
         'verbose': {
             # 'format': '%(process)d  %(levelname)s  %(asctime)s %(module)s: %(message)s',
             'format': "[%(asctime)s] %(process)d %(levelname)s [%(name)s:%(filename)s:%(lineno)s] %(message)s",
-            'datefmt' : "%d-%b-%Y %H:%M:%S"
+            'datefmt': "%d-%b-%Y %H:%M:%S"
         },
         'simple': {
             'format': '%(levelname)s: %(message)s'
@@ -226,7 +227,7 @@ LOGGING = {
             'level': 'INFO',
         },
         'students.signals': {
-            'handlers': ['console','file'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
         },
         'students.views.contact_admin': {
@@ -238,7 +239,7 @@ LOGGING = {
             'level': 'INFO',
         },
         'students.request': {
-            'handlers': ['file','console'],
+            'handlers': ['file', 'console'],
             'level': 'INFO',
             # 'propagate': False,
         },
@@ -261,14 +262,9 @@ AUTHENTICATION_BACKENDS = (
     # 'social.backends.facebook.FacebookOAuth2',
     'social.backends.facebook.Facebook2OAuth2',
     'django.contrib.auth.backends.ModelBackend',
-    )
+)
 # from social.backends.facebook import Facebook2AppOAuth2
 from social.backends.facebook import Facebook2OAuth2
 
 SOCIAL_AUTH_FACEBOOK_KEY = '571465946336791'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'c3460c81d831b0e181b8eec60e9f8c6a'
-
-
-
-
-
