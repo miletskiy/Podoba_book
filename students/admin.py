@@ -8,9 +8,11 @@ from .models.monthjournal import MonthJournal
 
 # Register your models here.
 # admin.site.register(Student,StudentAdmin)
-
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm, ValidationError, Form, ModelChoiceField
+from django.shortcuts import render
+
 
 class StudentFormAdmin(ModelForm):
 
@@ -27,10 +29,19 @@ class StudentFormAdmin(ModelForm):
 
         return self.cleaned_data['student_group']
 
+# from students.models.group import Group
+
+class UpdateGroupForm(Form):
+
+    group = ModelChoiceField(queryset=Group.objects.all().order_by('title'), required=False)
+
+    # class Meta:
+    #     model = Group
+    #     fields = "group",
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'ticket', 'student_group','photo']
-    list_display_links = ['last_name', 'first_name']
+    list_display = ['last_name', 'first_name', 'ticket', 'student_group','photo', 'edit']
+    list_display_links = ['last_name', 'first_name', 'edit']
     # list_editable = ['student_group']
     ordering = ['last_name']
     list_filter = ['student_group']
@@ -38,7 +49,36 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['last_name', 'first_name', 'middle_name', 'ticket',
         'notes']
     form = StudentFormAdmin
-    actions = ['make_krasivo', 'change_group','copy_student' ]
+    # form = UpdateGroupForm
+    actions = ['make_krasivo', 'change_group','copy_student' , "update_group"]
+
+    def edit(self, obj):
+        return 'Edit'
+
+    def update_group(modeladmin, request, queryset):
+        print request.POST
+        import pdb;
+        pdb.set_trace()
+        form = UpdateGroupForm(request.POST)
+        if 'change_group' in request.POST:
+            import pdb;pdb.set_trace()
+            form = UpdateGroupForm(request.POST)
+            if form.is_valid():
+                group = form.cleaned_data['group']
+                updated_group = queryset.update(student_group=group)
+                counter = queryset.count
+                modeladmin.message_user(request, u"У %s студентів було змненно групу на %s") % (counter, group)
+                return HttpResponseRedirect(request.get_full_path())
+
+            else:
+                form = UpdateGroupForm()
+            # return (request, 'students/students_list.html.html', {'students': queryset, 'form': form, 'title': u'Зміна групи'})
+        # print (request, 'students/change_group.html', {'students': queryset, 'form': form, 'title': u'Зміна групи'})
+        # return HttpResponseRedirect ('/students/change_group.html',{'students':queryset,'form':form,'title':u'Зміна групи'})
+        return render(request, 'students/change_group.html',{'students':queryset,'form':form,'title':u'Зміна групи'})
+        # return (request, 'students/change_group.html', {'students': queryset, 'form': form, 'title': u'Зміна групи'})
+
+    update_group.short_description = u'Перемістити у групу'
 
 
 
@@ -51,14 +91,14 @@ class StudentAdmin(admin.ModelAdmin):
         else:
             message_bit = "For selected students"
         self.message_user(request, "%s made good." % message_bit)
-        
+
     make_krasivo.short_description = u'Сделать хорошо'
 
 # Action deletion student from group. domashka370
     def change_group(self, request , queryset):
         queryset.update(student_group = None)
         self.message_user(request, "Group was changed. Student free for any group now.")
-    
+
     change_group.short_description = u"Удалить из группы"
 
 # Copy selected student. domashka370
@@ -68,7 +108,7 @@ class StudentAdmin(admin.ModelAdmin):
             ob.pk = None
             ob.save()
         self.message_user(request, "Selected student was copied.")
-        
+
     copy_student.short_description = u"Копировать студента"
 
     def view_on_site(self, obj):
