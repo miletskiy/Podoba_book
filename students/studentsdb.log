@@ -1,0 +1,8 @@
+[11-Oct-2015 14:30:41] 31566 INFO [students.request:signals.py:79] Jump from /exams/ . Requests summary: 1
+[11-Oct-2015 14:30:42] 31566 INFO [students.request:signals.py:79] Jump from /jsi18n.js . Requests summary: 2
+[11-Oct-2015 14:30:42] 31566 INFO [students.request:signals.py:79] Jump from /journal/ . Requests summary: 3
+[11-Oct-2015 14:30:43] 31566 INFO [students.request:signals.py:79] Jump from /jsi18n.js . Requests summary: 4
+[11-Oct-2015 14:30:43] 31566 INFO [students.request:signals.py:79] Jump from /log/ . Requests summary: 5
+[11-Oct-2015 14:30:43] 31566 INFO [students.request:signals.py:79] Jump from /jsi18n.js . Requests summary: 6
+[11-Oct-2015 14:30:44] 31566 INFO [students.request:signals.py:79] Jump from /contact-admin/ . Requests summary: 7
+[11-Oct-2015 14:30:44] 31566 INFO [students.request:signals.py:79] Jump from /jsi18n.js . Requests summary: 8
