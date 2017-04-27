@@ -1,0 +1,19 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <form action="." method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="hidden" name="action" value="change_group" />
+    <input  style="float: none" type="submit" name="do_action" value="Зберігти" />
+    <p>Групу буде змінено у таких студентів:</p>
+    <ul>
+      {% for student in students %}
+        <li>
+          <a href="{{ student.pk }}/">{{ student }}</a> - {{ student.student_group }}
+          <input type="hidden" name="_selected_action" value="{{ student.pk }}">
+        </li>
+      {% endfor %}
+    </ul>
+  </form>
+{% endblock %}

@@ -123,9 +123,9 @@ TIME_ZONE = 'UTC'
 USE_L10N = True
 
 LANGUAGES = (
-	('pl', 'Polski'),
-	('en', 'English'),
-	('uk', 'Ukrainian'),
+    ('pl', 'Polski'),
+    ('en', 'English'),
+    ('uk', 'Ukrainian'),
 )
 
 
@@ -237,11 +237,11 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'INFO',
         },
-        'students.request': {
-            'handlers': ['file','console'],
-            'level': 'INFO',
-            # 'propagate': False,
-        },
+        # 'students.request': {
+        #     'handlers': ['file','console'],
+        #     'level': 'INFO',
+        #     # 'propagate': False,
+        # },
         # 'django.request': {
         #     'handlers': ['file','console'],
         #     'level': 'DEBUG',
@@ -261,14 +261,9 @@ AUTHENTICATION_BACKENDS = (
     # 'social.backends.facebook.FacebookOAuth2',
     'social.backends.facebook.Facebook2OAuth2',
     'django.contrib.auth.backends.ModelBackend',
-    )
+)
 # from social.backends.facebook import Facebook2AppOAuth2
 from social.backends.facebook import Facebook2OAuth2
 
 SOCIAL_AUTH_FACEBOOK_KEY = '571465946336791'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'c3460c81d831b0e181b8eec60e9f8c6a'
-
-
-
-
-
